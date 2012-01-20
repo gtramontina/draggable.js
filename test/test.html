@@ -1,0 +1,23 @@
+<html>
+<head>
+    <title>Draggable.js</title>
+    <link rel="stylesheet" href="https://raw.github.com/visionmedia/mocha/master/mocha.css" />
+    
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="https://raw.github.com/LearnBoost/expect.js/d2440da086bf8dc38c6085641f23b968a0f48b29/expect.js"></script>
+    <script src="https://raw.github.com/tmcw/happen/master/src/happen.js"></script>
+    <script src="https://raw.github.com/visionmedia/mocha/master/mocha.js"></script>
+    
+    <script>
+        mocha.setup('bdd');
+        $(function() {
+            $('body').append('<div id="mocha">');
+            mocha.run();
+        });
+    </script>
+
+    <script src="../draggable.js"></script>
+    <script src="draggable.test.js"></script>
+</head>
+<body></body>
+</html>
