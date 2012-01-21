@@ -28,6 +28,28 @@ describe('Draggable.js', function() {
             expect(actualPosition.top).to.be(newTopPosition);
             expect(actualPosition.left).to.be(newLeftPosition);
         });
+
+        
+        var fairlyHighZIndex = '10';
+        it('should bring the element to front', function() {
+            draggable(draggableBox);
+            dragElementBy(draggableBox, -10, -10);
+            
+            expect($(draggableBox).css('z-index')).to.be(fairlyHighZIndex);
+        });
+
+        it('should send the previous element to back', function() {
+            var previousElement = $('<div style="width:100px;height:100px;position:fixed;">');
+            $('body').append(previousElement);
+            previousElement = previousElement.get(0);
+            draggable(previousElement);
+            draggable(draggableBox);
+            dragElementBy(previousElement, 300, 200);
+
+            dragElementBy(draggableBox, 10, 10);
+            var decreasedZIndex = fairlyHighZIndex - 1 + '';
+            expect($(previousElement).css('z-index')).to.be(decreasedZIndex);
+        });
     });
 
     describe('when dragging an element with a handle to a new position', function() {
