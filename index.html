@@ -1,1 +1,73 @@
-Draggable.js
+<html>
+<head>
+    <title>Draggable.js</title>
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Droid+Serif">
+    <link rel="stylesheet" href="https://raw.github.com/indexzero/code-highlighter/master/syntax.css">
+    <link rel="stylesheet" href="stylesheet.css">
+
+    <script src="https://raw.github.com/gtramontina/draggable.js/master/draggable.min.js"></script>
+    <script src="https://raw.github.com/LeaVerou/prefixfree/master/prefixfree.min.js"></script>
+    <script src="https://raw.github.com/indexzero/code-highlighter/master/code-highlighter.js"></script>
+    <script src="https://raw.github.com/indexzero/code-highlighter/master/languages/javascript.js"></script>
+</head>
+<body>
+
+    <a href="http://github.com/gtramontina/draggable.js"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/4c7dc970b89fd04b81c8e221ba88ff99a06c6b61/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f77686974655f6666666666662e706e67" alt="Fork me on GitHub"></a>
+
+    <header class="depressed">
+        <a href="https://raw.github.com/gtramontina/draggable.js/master/draggable.min.js" class="minified"></a>
+        <h1>Draggable.js</h1>
+        <h2>Make your DOM elements draggable</h2>
+    </header>
+
+    <p>It always goes like this:</p>
+    <p>You need to do a small and specific thing in your brand new toy project. Then you google a little, dig GitHub and find nothing. So you go ahead and write your own tiny little lib. When you are about to make it public, you stumble upon a <a href="http://kbjr.github.com/DragDrop/">lib</a> that does exactly what you needed. Dammit! Too late...</p>
+    <p>Anyway, here it is. A library that makes your life easier when you want your elements do be draggable. Take a look at a few examples:</p>
+
+    <!-- Example #1: Free bounds -->
+    <div class="example">
+        <div class="container">
+            <div id="free_bounds" class="draggable">
+                <span>#free_bounds</span>
+            </div>
+        </div>
+
+        <div class="source depressed">
+            <pre><code class="javascript">
+var free_bounds = document.getElementById('free_bounds');
+draggable(free_bounds);
+            </code></pre>
+        </div>
+    </div>
+
+    <!-- Example #2: With a handle -->
+    <div class="example">
+        <div class="container">
+            <div id="with_handle" class="draggable">
+                <span>#with_handle</span>
+            </div>
+        </div>
+
+        <div class="source depressed">
+            <pre><code class="javascript">
+var with_handle = document.getElementById('with_handle');
+draggable(with_handle, with_handle.getElementsByTagName('span')[0]);
+            </code></pre>
+        </div>
+    </div>
+    
+    
+    <script>
+        !(function() {
+            // Execute whatever is inside the <code> tags.
+            var examples = document.getElementsByClassName('example');
+            for (var i = examples.length - 1; i >= 0; i--) {
+                var example = examples[i];
+                var source = example.getElementsByClassName('source')[0];
+                var source = source.textContent || source.innerText;
+                eval(source);
+            };
+        })();
+    </script>
+</body>
+</html>

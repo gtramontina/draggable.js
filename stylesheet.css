@@ -1,0 +1,118 @@
+body {
+    font-family: 'Droid Serif';
+    color: rgba(0,0,0,0.8);
+    padding: 0;
+    margin: 0 250px 0 250px;
+    background-image: url(batthern.png)
+}
+
+h1 {
+    font-size: 4em;
+    margin: 0;
+    text-align: right;
+    color: rgba(255, 255, 255, 0.5);
+    text-shadow: -5px 0 1px rgba(255, 255, 255, 0.1), -10px 0 2px rgba(255, 255, 255, 0.1), -15px 0 3px rgba(255, 255, 255, 0.1), -20px 0 4px rgba(255, 255, 255, 0.1), -25px 0 5px rgba(255, 255, 255, 0.1), -30px 0 6px rgba(255, 255, 255, 0.1), -35px 0 7px rgba(255, 255, 255, 0.1), -40px 0 8px rgba(255, 255, 255, 0.1), -45px 0 9px rgba(255, 255, 255, 0.1);
+    font-style: italic;
+}
+
+h2 {
+    font-size: 1em;
+    text-align: right;
+    margin: 0;
+    margin-top: -11px;
+    letter-spacing: 0.15em;
+    color: #FFBF00;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+header {
+    margin-top: 10px;
+}
+
+pre {
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+    color: #FF6347;
+}
+
+a:hover {
+    text-shadow: -1px -1px 1px white, 1px 1px 1px rgba(0, 0, 0, 0.4);
+}
+
+p {
+    text-align: justify;
+    font-variant: small-caps;
+    font-size: 1.3em;
+    text-shadow: 1px 1px 1px white;
+}
+
+code {
+    font-family: 'Monaco' monospace;
+    font-size: 12px;
+    text-shadow: 0;
+}
+
+.depressed {
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.8) inset, 1px 1px 2px rgba(255,255,255,0.8);
+}
+
+.example {
+    margin: 10px;
+    height: 100px;
+}
+
+.container {
+    float: left;
+    width: auto;
+}
+
+.source {
+    float: right;
+    width: 70%;
+}
+
+.draggable {
+    width: 150px;
+    height: 100px;
+    padding: 0;
+    border: 1px solid rgba(0,0,0,0.5);
+    border-radius: 10px;
+    background: rgba(255, 165, 0, 0.25);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 10px 20px rgba(255,255,255,0.25), inset 0 -15px 30px rgba(0,0,0,0.3);
+}
+
+.draggable span {
+    display: block;
+    text-align: center;
+}
+
+#with_handle span {
+    border-radius: 9px 9px 0 0;
+    background-image: -webkit-linear-gradient(top, rgba(170,0,0,0.6), rgba(0, 0, 0 ,0));
+    color: white;
+}
+
+.minified {
+    width: 68px;
+    height: 63px;
+    background-image: url(min.icon.png);
+    display: inline-block;
+    float: left;
+}
+
+
+/*--------------------------------------------------------------
+ Javascript
+ --------------------------------------------------------------*/
+pre code.javascript { color: #FFFFFF; }
+code.javascript span.comment   { color: #66cc33;  }
+code.javascript span.string    { color: #DFC484;  }
+code.javascript span.keywords  { color: #C9783E;  }
+code.javascript span.brackets  { color: #999999;  }
+code.javascript span.global    { color: #C9783E;  }
