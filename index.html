@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="stylesheet.css">
 
     <script src="https://raw.github.com/gtramontina/draggable.js/master/draggable.min.js"></script>
+
+    <script src="https://raw.github.com/ded/reqwest/master/reqwest.min.js"></script>
     <script src="https://raw.github.com/LeaVerou/prefixfree/master/prefixfree.min.js"></script>
     <script src="https://raw.github.com/indexzero/code-highlighter/master/code-highlighter.js"></script>
     <script src="https://raw.github.com/indexzero/code-highlighter/master/languages/javascript.js"></script>
@@ -55,9 +57,11 @@ draggable(with_handle, with_handle.getElementsByTagName('span')[0]);
             </code></pre>
         </div>
     </div>
-    
-    <iframe src="https://raw.github.com/gtramontina/draggable.js/master/test/test.html"></iframe>
-    
+
+    <div id="unittests">
+        <p>Unit Tests (<a href="https://github.com/gtramontina/draggable.js/tree/master/test">source</a>):</p>
+    </div>
+        
     <script>
         !(function() {
             // Execute whatever is inside the <code> tags.
@@ -68,6 +72,28 @@ draggable(with_handle, with_handle.getElementsByTagName('span')[0]);
                 var source = source.textContent || source.innerText;
                 eval(source);
             };
+
+            // Load unit tests
+            var testPage = 'https://raw.github.com/gtramontina/draggable.js/master/test/test.html';
+            var testSpec = 'https://raw.github.com/gtramontina/draggable.js/master/test/draggable.test.js';
+            var source = 'https://raw.github.com/gtramontina/draggable.js/master/draggable.js';
+            reqwest({
+                url: 'http://anyorigin.com/get?url='+testPage+'&callback=?',
+                type: 'jsonp',
+                success: function(data) {
+                    var body = data.contents;
+                    body = body
+                        .replace('src="../draggable.js"', 'src="'+source+'"')
+                        .replace('src="draggable.test.js"', 'src="'+testSpec+'"');
+                    
+                    var iframe = document.getElementById('unittests').appendChild(document.createElement('iframe'));
+                    iframe.classList.add('depressed');
+                    iframe.classList.add('unittests');
+                    var iframeDocument = iframe.contentWindow.document;
+                    iframeDocument.open().write(body);
+                    iframeDocument.close();
+                }
+            });
         })();
     </script>
 </body>
