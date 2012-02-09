@@ -1,6 +1,5 @@
 !(function(moduleName, definition) {
-    // Whether to expose Draggable as an AMD module
-    // or to the global object.
+    // Whether to expose Draggable as an AMD module or to the global object.
     if (typeof define === 'function' && typeof define.amd === 'object') define(definition);
     else this[moduleName] = definition();
 
@@ -10,13 +9,14 @@
     
     function draggable(element, handle) {
         handle = handle || element;
+        setFixedPosition(element);
         handle.addEventListener('mousedown', function(event) {
             startDragging(event, element);
         });
     }
 
     function startDragging(event, element) {
-        if (currentElement) sendToBack(currentElement);
+        currentElement && sendToBack(currentElement);
         currentElement = bringToFront(element);
         addDocumentListeners();
 
@@ -35,14 +35,19 @@
     }
 
     function bringToFront(element) {
-        element.style['zIndex'] = fairlyHighZIndex;
         element.style['z-index'] = fairlyHighZIndex;
+        element.style['zIndex'] = fairlyHighZIndex;
         return element;
     }
 
     function addDocumentListeners() {
+        document.addEventListener('selectstart', cancelDocumentSelection);
         document.addEventListener('mousemove', repositionElement);
         document.addEventListener('mouseup', removeDocumentListeners);
+    }
+
+    function setFixedPosition(element) {
+        element.style.position = 'fixed';
     }
 
     function getInitialPosition(element) {
@@ -62,6 +67,13 @@
         return value + 'px';
     }
 
+    function cancelDocumentSelection(event) {
+        event.preventDefault && event.preventDefault();
+        event.stopPropagation && event.stopPropagation();
+        event.returnValue = false;
+        return false;
+    }
+
     function repositionElement(event) {
         var style = currentElement.style;
         var elementXPosition = parseInt(style.left, 10);
@@ -78,6 +90,7 @@
     }
 
     function removeDocumentListeners() {
+        document.removeEventListener('selectstart', cancelDocumentSelection);
         document.removeEventListener('mousemove', repositionElement);
         document.removeEventListener('mouseup', removeDocumentListeners);
     }

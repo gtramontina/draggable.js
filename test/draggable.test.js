@@ -6,7 +6,7 @@ describe('Draggable.js', function() {
     };
 
     beforeEach(function() {
-        draggableBox = $('<div style="width:100px;height:100px;position:fixed;">');
+        draggableBox = $('<div style="width:100px;height:100px;">');
         draggableBox.css(initialPosition);
         $('body').append(draggableBox);
         draggableBox = draggableBox.get(0);
@@ -14,6 +14,11 @@ describe('Draggable.js', function() {
 
     afterEach(function() {
         $(draggableBox).remove();
+    });
+
+    it('when making an element draggable, should set its position as fixed', function() {
+        draggable(draggableBox);
+        expect($(draggableBox).css('position')).to.be('fixed');
     });
 
     describe('when dragging an element to a new position', function() {
