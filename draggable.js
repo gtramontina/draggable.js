@@ -9,7 +9,7 @@
     
     function draggable(element, handle) {
         handle = handle || element;
-        setFixedPosition(element);
+        setPositionType(element);
         handle.addEventListener('mousedown', function(event) {
             startDragging(event, element);
         });
@@ -46,8 +46,8 @@
         document.addEventListener('mouseup', removeDocumentListeners);
     }
 
-    function setFixedPosition(element) {
-        element.style.position = 'fixed';
+    function setPositionType(element) {
+        element.style.position = 'absolute';
     }
 
     function getInitialPosition(element) {

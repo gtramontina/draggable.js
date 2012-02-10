@@ -16,9 +16,9 @@ describe('Draggable.js', function() {
         $(draggableBox).remove();
     });
 
-    it('when making an element draggable, should set its position as fixed', function() {
+    it('when making an element draggable, should set its position as absolute', function() {
         draggable(draggableBox);
-        expect($(draggableBox).css('position')).to.be('fixed');
+        expect($(draggableBox).css('position')).to.be('absolute');
     });
 
     describe('when dragging an element to a new position', function() {
