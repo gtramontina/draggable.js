@@ -10,9 +10,21 @@
     function draggable(element, handle) {
         handle = handle || element;
         setPositionType(element);
+        setDraggableListeners(element);
         handle.addEventListener('mousedown', function(event) {
             startDragging(event, element);
         });
+    }
+
+    function setDraggableListeners(element) {
+        element.draggableListeners = {
+            start: [],
+            drag: [],
+            stop: []
+        };
+        element.whenDragStarts = addListener(element, 'start');
+        element.whenDragging = addListener(element, 'drag');
+        element.whenDragStops = addListener(element, 'stop');
     }
 
     function startDragging(event, element) {
@@ -26,6 +38,21 @@
 
         currentElement.lastXPosition = event.clientX;
         currentElement.lastYPosition = event.clientY;
+
+        triggerEvent('start', { x: event.clientX, y: event.clientY });
+    }
+
+    function addListener(element, type) {
+        return function(listener) {
+            element.draggableListeners[type].push(listener);
+        };
+    }
+
+    function triggerEvent(type, args) {
+        var listeners = currentElement.draggableListeners[type];
+        for (var i = listeners.length - 1; i >= 0; i--) {
+            listeners[i](args);
+        };
     }
 
     function sendToBack(element) {
@@ -87,12 +114,16 @@
 
         currentElement.lastXPosition = event.clientX;
         currentElement.lastYPosition = event.clientY;
+
+        triggerEvent('drag', { x: elementNewXPosition, y: elementNewYPosition });
     }
 
-    function removeDocumentListeners() {
+    function removeDocumentListeners(event) {
         document.removeEventListener('selectstart', cancelDocumentSelection);
         document.removeEventListener('mousemove', repositionElement);
         document.removeEventListener('mouseup', removeDocumentListeners);
+
+        triggerEvent('stop', { x: event.clientX, y: event.clientY });
     }
 
     return draggable;

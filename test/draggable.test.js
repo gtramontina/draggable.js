@@ -24,21 +24,18 @@ describe('Draggable.js', function() {
     describe('when dragging an element to a new position', function() {
         it('should update the element\'s position', function() {
             draggable(draggableBox);
-            dragElementBy(draggableBox, 100, 100);
-
-            var newTopPosition = initialPosition.top + 100;
-            var newLeftPosition = initialPosition.left + 100;
+            dragElementTo(draggableBox, [310, 220]);
 
             var actualPosition = $(draggableBox).position();
-            expect(actualPosition.top).to.be(newTopPosition);
-            expect(actualPosition.left).to.be(newLeftPosition);
+            expect(actualPosition.top).to.be(220);
+            expect(actualPosition.left).to.be(310);
         });
 
         
         var fairlyHighZIndex = '10';
         it('should bring the element to front', function() {
             draggable(draggableBox);
-            dragElementBy(draggableBox, -10, -10);
+            dragElementTo(draggableBox);
             
             expect($(draggableBox).css('z-index')).to.be(fairlyHighZIndex);
         });
@@ -49,11 +46,48 @@ describe('Draggable.js', function() {
             previousElement = previousElement.get(0);
             draggable(previousElement);
             draggable(draggableBox);
-            dragElementBy(previousElement, 300, 200);
+            dragElementTo(previousElement);
 
-            dragElementBy(draggableBox, 10, 10);
+            dragElementTo(draggableBox, 0, 0);
             var decreasedZIndex = fairlyHighZIndex - 1 + '';
             expect($(previousElement).css('z-index')).to.be(decreasedZIndex);
+        });
+
+        describe('should trigger events', function() {
+            it('when drag starts', function(done) {
+                draggable(draggableBox);
+                draggableBox.whenDragStarts(function(event) {
+                    assertTopLeftPosition([event.x, event.y], [initialPosition.left, initialPosition.top], done);
+                });
+                dragElementTo(draggableBox);
+            });
+
+            it('when dragging', function(done) {
+                draggable(draggableBox);
+                draggableBox.whenDragging(function(event) {
+                    assertTopLeftPosition([event.x, event.y], [222, 111], done);
+                });
+                dragElementTo(draggableBox, [222, 111]);
+            });
+
+            it('when drag stops', function(done) {
+                draggable(draggableBox);
+                draggableBox.whenDragStops(function(event) {
+                    assertTopLeftPosition([event.x, event.y], [555, 666], done);
+                });
+                dragElementTo(draggableBox, [111, 222], [333, 444], [555, 666]);
+            });
+
+            function assertTopLeftPosition(actual, expected, done) {
+                var error;
+                try {
+                    expect(actual[0]).to.be(expected[0]);
+                    expect(actual[1]).to.be(expected[1]);
+                } catch (e) {
+                    error = e;
+                }
+                done(error);
+            }
         });
     });
 
@@ -69,8 +103,7 @@ describe('Draggable.js', function() {
 
         describe('via handle', function() {
             it('should update the element\'s position', function() {
-                dragElementBy(handle, 50, 100);
-
+                dragElementTo(handle, [50, 100]);
 
                 var newTopPosition = initialPosition.top + 100;
                 var newLeftPosition = initialPosition.left + 50;
@@ -84,7 +117,7 @@ describe('Draggable.js', function() {
 
         describe('via the element itselft', function() {
             it('should not do anything', function() {
-                dragElementBy(draggableBox, 200, 100);
+                dragElementTo(draggableBox, [200, 100]);
 
                 var actualPosition = $(draggableBox).position();
                 expect(actualPosition.top).to.be(initialPosition.top);
@@ -93,12 +126,17 @@ describe('Draggable.js', function() {
         });
     });
 
-    function dragElementBy(element, differenceInX, differenceInY) {
-        happen.mousedown(element);
-        happen.mousemove(element, {
-            clientX: differenceInX,
-            clientY: differenceInY
-        });
-        happen.mouseup(element);
+    function dragElementTo(/* element, points */) {
+        var element = arguments[0];
+        var points = (2 <= arguments.length) ? Array.prototype.slice.call(arguments, 1) : [];
+        
+        var downPosition = $(element).position();
+        happen.mousedown(element, { clientX: downPosition.left, clientY: downPosition.top });
+        var lastPoint = [downPosition.left, downPosition.top];
+        for (var i = 0; i < points.length; i++) {
+            happen.mousemove(element, { clientX: points[i][0], clientY: points[i][1] });
+            lastPoint = points[i];
+        };
+        happen.mouseup(element, { clientX: lastPoint[0], clientY: lastPoint[1] });
     };
 });
