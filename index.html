@@ -58,6 +58,30 @@ draggable(with_handle, with_handle.getElementsByTagName('span')[0]);
         </div>
     </div>
 
+    <!-- Example #3: Events! -->
+    <div class="example">
+        <div class="container">
+            <div id="events" class="draggable">
+                <span>#events</span>
+                <p class="info"></p>
+            </div>
+        </div>
+
+        <div class="source depressed">
+            <pre><code class="javascript">
+var events = document.getElementById('events');
+var info = events.getElementsByTagName('p')[0];
+draggable(events);
+function setInfo(type) {
+    return function(event) { info.innerHTML = type + ': ' + event.x + ', ' + event.y; }
+}
+events.whenDragStarts(setInfo('Start'));
+events.whenDragging(setInfo('Dragging'));
+events.whenDragStops(setInfo('Stop'));
+            </code></pre>
+        </div>
+    </div>
+
     <div id="unittests">
         <p>Unit Tests (<a href="https://github.com/gtramontina/draggable.js/tree/master/test">source</a>):</p>
     </div>
