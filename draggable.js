@@ -39,7 +39,7 @@
         currentElement.lastXPosition = event.clientX;
         currentElement.lastYPosition = event.clientY;
 
-        triggerEvent('start', { x: event.clientX, y: event.clientY });
+        triggerEvent('start', { x: currentElement.lastXPosition, y: currentElement.lastYPosition });
     }
 
     function addListener(element, type) {
@@ -123,7 +123,7 @@
         document.removeEventListener('mousemove', repositionElement);
         document.removeEventListener('mouseup', removeDocumentListeners);
 
-        triggerEvent('stop', { x: event.clientX, y: event.clientY });
+        triggerEvent('stop', { x: currentElement.lastXPosition, y: currentElement.lastYPosition });
     }
 
     return draggable;
