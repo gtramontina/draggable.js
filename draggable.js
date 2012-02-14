@@ -82,14 +82,14 @@
         var left = 0;
         var currentElement = element;
         do {
-            top += element.offsetTop;
-            left += element.offsetLeft;
+            top += currentElement.offsetTop;
+            left +=  currentElement.offsetLeft;
         } while (currentElement = currentElement.offsetParent);
 
         var computedStyle = getComputedStyle? getComputedStyle(element) : false;
         if (computedStyle) {
-            left = left - parseInt(computedStyle['margin-left']) - parseInt(computedStyle['border-left']);
-            top = top - parseInt(computedStyle['margin-top']) - parseInt(computedStyle['border-top']);
+            left = left - (parseInt(computedStyle['margin-left']) || 0) - (parseInt(computedStyle['border-left']) || 0);
+            top = top - (parseInt(computedStyle['margin-top']) || 0) - (parseInt(computedStyle['border-top']) || 0);
         }
 
         return {
