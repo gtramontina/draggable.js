@@ -16,6 +16,10 @@
         });
     }
 
+    function setPositionType(element) {
+        element.style.position = 'absolute';
+    }
+
     function setDraggableListeners(element) {
         element.draggableListeners = {
             start: [],
@@ -73,17 +77,21 @@
         document.addEventListener('mouseup', removeDocumentListeners);
     }
 
-    function setPositionType(element) {
-        element.style.position = 'absolute';
-    }
-
     function getInitialPosition(element) {
         var top = 0;
         var left = 0;
+        var currentElement = element;
         do {
             top += element.offsetTop;
             left += element.offsetLeft;
-        } while (element = element.offsetParent);
+        } while (currentElement = currentElement.offsetParent);
+
+        var computedStyle = getComputedStyle? getComputedStyle(element) : false;
+        if (computedStyle) {
+            left = left - parseInt(computedStyle['margin-left']) - parseInt(computedStyle['border-left']);
+            top = top - parseInt(computedStyle['margin-top']) - parseInt(computedStyle['border-top']);
+        }
+
         return {
             top: top,
             left: left
