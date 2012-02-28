@@ -53,19 +53,35 @@ describe('Draggable.js', function() {
             expect($(previousElement).css('z-index')).to.be(decreasedZIndex);
         });
 
-        describe('should trigger events', function() {
+        describe('should trigger events', function() {            
             it('when drag starts', function(done) {
                 draggable(draggableBox);
                 draggableBox.whenDragStarts(function(event) {
                     assertTopLeftPosition([event.x, event.y], [initialPosition.left, initialPosition.top], done);
+                    expect(event.mouseEvent).to.be.a(MouseEvent);
                 });
                 dragElementTo(draggableBox);
             });
+
+            it('should prevent the drag start action when any of the listeners return false', function() {
+                draggable(draggableBox);
+                draggableBox.whenDragStarts(function() {
+                    return false;
+                });
+                var originalPosition = $(draggableBox).position();
+                dragElementTo(draggableBox, [555, 666]);
+                
+                var lastPosition = $(draggableBox).position();
+                expect(lastPosition.top).to.be(originalPosition.top);
+                expect(lastPosition.left).to.be(originalPosition.left);
+            });
+
 
             it('when dragging', function(done) {
                 draggable(draggableBox);
                 draggableBox.whenDragging(function(event) {
                     assertTopLeftPosition([event.x, event.y], [222, 111], done);
+                    expect(event.mouseEvent).to.be.a(MouseEvent);
                 });
                 dragElementTo(draggableBox, [222, 111]);
             });
@@ -74,6 +90,7 @@ describe('Draggable.js', function() {
                 draggable(draggableBox);
                 draggableBox.whenDragStops(function(event) {
                     assertTopLeftPosition([event.x, event.y], [555, 666], done);
+                    expect(event.mouseEvent).to.be.a(MouseEvent);
                 });
                 dragElementTo(draggableBox, [111, 222], [333, 444], [555, 666]);
             });

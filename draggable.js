@@ -34,16 +34,18 @@
     function startDragging(event, element) {
         currentElement && sendToBack(currentElement);
         currentElement = bringToFront(element);
-        addDocumentListeners();
+        
 
         var initialPosition = getInitialPosition(currentElement);
         currentElement.style.left = inPixels(initialPosition.left);
         currentElement.style.top = inPixels(initialPosition.top);
-
         currentElement.lastXPosition = event.clientX;
         currentElement.lastYPosition = event.clientY;
 
-        triggerEvent('start', { x: initialPosition.left, y: initialPosition.top });
+        var okToGoOn = triggerEvent('start', { x: initialPosition.left, y: initialPosition.top, mouseEvent: event });
+        if (!okToGoOn) return;
+
+        addDocumentListeners();
     }
 
     function addListener(element, type) {
@@ -53,10 +55,12 @@
     }
 
     function triggerEvent(type, args) {
+        var result = true;
         var listeners = currentElement.draggableListeners[type];
         for (var i = listeners.length - 1; i >= 0; i--) {
-            listeners[i](args);
+            if (listeners[i](args) === false) result = false;
         };
+        return result;
     }
 
     function sendToBack(element) {
@@ -123,7 +127,7 @@
         currentElement.lastXPosition = event.clientX;
         currentElement.lastYPosition = event.clientY;
 
-        triggerEvent('drag', { x: elementNewXPosition, y: elementNewYPosition });
+        triggerEvent('drag', { x: elementNewXPosition, y: elementNewYPosition, mouseEvent: event });
     }
 
     function removeDocumentListeners(event) {
@@ -133,7 +137,7 @@
 
         var left = parseInt(currentElement.style.left, 10);
         var top = parseInt(currentElement.style.top, 10);
-        triggerEvent('stop', { x: left, y: top });
+        triggerEvent('stop', { x: left, y: top, mouseEvent: event });
     }
 
     return draggable;
