@@ -19,13 +19,30 @@ To make it draggable only when dragging the handle element:
     var handle = elementToDrag.getElementsByClassName('handle')[0];    
     draggable(elementToDrag, handle);
 
-#### Notes
+### Notes
 * You have to provide the raw element, not the one wrapped by your favorite dom query lib. Using jQuery, for example, you'd need to do something like `var elementToDrag = $('#elementToDrag').get(0);`
 * If you are using AMD (e.g. require.js) this lib becomes a module. Otherwise it'll create a global `draggable`.
 
 ### Browser Compatibility
-I've ran the tests in Chrome and Firefox.
-If you find any incompatibility or want to support other browsers, please do a pull request with the fix! :-)
+* Chrome
+* Firefox
+* Internet Explorer 7+ (probably 6+, but untested)
+* Safari
+* Opera
+
+### To Do
+* Add iOS support
+* Defer to CSS3 transitions for hardware accelerated animation in modern browsers
+* Defer to HTML5 drag and drop API in modern browsers
 
 ### License
 This is licensed under the feel-free-to-do-whatever-you-want-to-do license.
+
+### Changelog
+
+v2.0 (modified by Boris Cherny)
+* Minimized repaints by eliminating style queries on every step of the drag
+* Generally improved performance
+* Improved browser compatibility
+* Standardized event names (start -> dragstart, stop -> dragend)
+* Lots of bugfixes (eliminated outline dragging, fixed border/margin/zindex querying)
