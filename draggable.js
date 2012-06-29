@@ -1,86 +1,144 @@
-!(function(moduleName, definition) {
-	// Whether to expose Draggable as an AMD module or to the global object.
-	if (typeof define === 'function' && typeof define.amd === 'object') define(definition);
-	else this[moduleName] = definition();
-
-})('draggable', function definition() {
+function Drag(element, handle, opts) {
 
 	// options
+	this.options = {
+		setCursor: true,	// change cursor to reflect draggable?
+		setPosition: true,	// change draggable position to absolute?
+		direction: {		// which directions to enable drag in
+			x: true,		// true|false
+			y: true			// true|false
+		},
+		limit: {			// limit the drag bounds
+			x: null,		// [minimum position, maximum position]
+			y: null			// [minimum position, maximum position]
+		},
+		onDrag: null,		// function(element, X position, Y position, event)
+		onDragStart: null,	// function(element, X position, Y position, event)
+		onDragEnd: null		// function(element, X position, Y position, event)
+	};
 
-	var setCursor = true;
-	var setPosition = true;
+	var options = this.options;
 
-	// vars
-
-	var X, Y, initialX, initialY;
-	var highZIndex = 10000;
-	var isIE = navigator.appName === 'Microsoft Internet Explorer';
+	// set user-defined options
 	
-	function draggable(element, handle) {
+	for (opt in opts) {
+		if (options.hasOwnProperty(opt)) {
+			options[opt] = opts[opt];
+		}
+	}
 
+	// internal vars
+	var cursorOffsetX, cursorOffsetY, elementHeight, elementWidth;
+	var self = this;
+	var isIE = navigator.appName === 'Microsoft Internet Explorer';
+
+	// public vars
+	this.element = handle || element;
+	this.X;
+	this.Y;
+
+	this.move = function(x ,y) {
+		var style = this.element.style;
+		var direction = options.direction;
+		var limit = options.limit;
+
+		if (direction.x) {
+			if (limit.x !== null) {
+				var lowIsOk  = x > limit.x[0],
+					highIsOk = x + elementWidth <= limit.x[1];
+			}
+			else var lowIsOk = highIsOk = 1;
+
+			self.X = x;
+			style.left =
+				lowIsOk && highIsOk
+				? x + 'px'
+				: (!lowIsOk ? 0 : (limit.x[1]-elementWidth) + 'px');
+		}
+
+		if (direction.y) {
+			if (limit.y !== null) {
+				var lowIsOk  = y > limit.y[0],
+					highIsOk = y + elementHeight <= limit.y[1];
+			}
+			else var lowIsOk = highIsOk = 1;
+
+			self.Y = y;
+			style.top =
+				lowIsOk && highIsOk
+				? y + 'px'
+				: (!lowIsOk ? 0 : (limit.y[1]-elementHeight) + 'px');
+		}
+	};
+	
+	var init = function() {
+		// set the element
+		var element = self.element;
 		if (!element) throw new Error('Invalid element passed to draggable: ' + element);
 
-		handle = handle || element;
-		setListeners(element);
-		addEvent(handle, 'mousedown', function(event){start(event, element)});
+		// get element dimensions
+		var compStyle = getStyle(element);
+		elementHeight = nopx(compStyle.height);
+		elementWidth = nopx(compStyle.width);
 
-		if (setPosition) {
+		// optional styling
+		if (options.setPosition) {
 			var style = element.style;
 			style.left = element.offsetLeft + 'px';
 			style.top = element.offsetTop + 'px';
+			style.right = 'auto';
+			style.bottom = 'auto';
 			style.position = 'absolute';
 		}
-		if (setCursor) element.style.cursor = 'move';
-	}
+		if (options.setCursor) style.cursor = 'move';
 
-	function start(e, element) {
+		// attach mousedown event
+		addEvent(element, 'mousedown', start);
+	};
+
+	var start = function(e) {
 		// cross-browser event
 		var e = e || event;
 
 		// prevent browsers from visually dragging the element's outline
-		isIE ? e.returnValue = false : e.preventDefault();
+		stopEvent(e);
 
 		// set a high z-index, just in case
-		element.oldZindex = element.style.zIndex || '';
-		element.style.zIndex = highZIndex;
+		var element = self.element;
+		element.oldZindex = element.style.zIndex;
+		element.style.zIndex = 10000;
 
 		// set initial position
 		var initialPosition = getInitialPosition(element);
-		X = initialX = initialPosition.x - e.clientX;
-		Y = initialY = initialPosition.y - e.clientY;
+		cursorOffsetX = (self.X=initialPosition.x) - e.clientX;
+		cursorOffsetY = (self.Y=initialPosition.y) - e.clientY;
 
 		// add event listeners
 		var doc = document;
-		addEvent(doc, 'selectstart', cancelDocumentSelection);
+		addEvent(doc, 'selectstart', stopEvent);
 		addEvent(doc, 'mousemove', drag);
 		addEvent(doc, 'mouseup', stop);
 
 		// trigger start event
-		triggerEvent('dragstart', {
-			x: initialPosition.x,
-			y: initialPosition.y,
-			mouseEvent: e
-		});
-	}
+		if (f=options.onDragStart) f(element, self.X, self.Y, e);
+	};
 
-	function drag(e) {
+	var drag = function(e) {
 		// cross-browser event
 		var e = e || event;
 
 		// compute new coordinates
-		X = initialX + e.clientX;
-		Y = initialY + e.clientY;
+		var x = e.clientX + cursorOffsetX;
+		var y = e.clientY + cursorOffsetY;
 
 		// move the element
-		var style = element.style;
-		style.left = X + 'px';
-		style.top = Y + 'px';
+		self.move(x, y);
 
 		// trigger drag event
-		triggerEvent('drag', {x: X, y: Y, mouseEvent: e});
-	}
+		if (f=options.onDrag) f(self.element, x, y, e);
+	};
 
-	function stop(e) {
+	var stop = function(e) {
 		// cross-browser event
 		var e = e || event;
 
@@ -88,20 +146,16 @@
 		var doc = document;
 		removeEvent(doc, 'mousemove', drag);
 		removeEvent(doc, 'mouseup', stop);
-		removeEvent(doc, 'selectstart', cancelDocumentSelection);
+		removeEvent(doc, 'selectstart', stopEvent);
 
 		// resent element's z-index
-		element.style.zIndex = element.oldZindex;
+		self.element.style.zIndex = self.element.oldZindex;
 
-		// drigger dragend event
-		triggerEvent('dragend', {
-			x: X,
-			y: Y,
-			mouseEvent: e
-		});
-	}
+		// trigger dragend event
+		if (f=options.onDragEnd) f(self.element, self.X, self.Y, e);
+	};
 
-	function getInitialPosition(element) {
+	var getInitialPosition = function(element) {
 
 		var top = 0;
 		var left = 0;
@@ -111,7 +165,7 @@
 		do {
 			top += i.offsetTop;
 			left +=  i.offsetLeft;
-		} while (i = i.offsetParent);
+		} while (i = i.offsetParent && !getStyle(i.parentNode).position);
 
 		// subtract margin and border widths
 		if (style = getStyle(element)) {
@@ -120,36 +174,7 @@
 		}
 
 		return {x: left, y: top};
-	}
-
-	function cancelDocumentSelection(e) {
-		isIE ? event.returnValue = false : e.preventDefault();
-	}
-
-	function addListener(element, type) {
-		return function(listener) {
-			element.draggableListeners[type].push(listener);
-		};
-	}
-
-	function setListeners(element) {
-		element.draggableListeners = {
-			dragstart: [],
-			drag: [],
-			dragend: []
-		};
-		element.whenDragStarts = addListener(element, 'dragstart');
-		element.whenDragging = addListener(element, 'drag');
-		element.whenDragStops = addListener(element, 'dragend');
-	}
-
-	function triggerEvent(type, args) {
-		var result = true;
-		for (listeners = element.draggableListeners[type], n = listeners.length; n--;) {
-			if (listeners[n](args) === false) result = false;
-		}
-		return result;
-	}
+	};
 
 	function addEvent(element, e, func) {
 		return isIE ? element.attachEvent('on'+e, func) : element.addEventListener(e, func, false);
@@ -163,9 +188,13 @@
 		return isIE ? element.currentStyle : getComputedStyle(element);
 	}
 
-	function nopx(string) {
+	var nopx = function(string) {
 		return parseInt(string, 10);
-	}
+	};
 
-	return draggable;
-});
+	var stopEvent = function(e) {
+		isIE ? e.returnValue = false : e.preventDefault();
+	};
+
+	init();
+}
