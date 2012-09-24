@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+	<title>draggable.js > Demo</title>
+
+	<style type="text/css">
+		* {border:0;margin:0;outline:0;padding:0}
+
+		body {
+			text-align: center
+		}
+
+		div {
+			background: #666;
+			height: 100px;
+			margin: 100px auto;
+			width: 100px;
+		}
+		div:hover {background:#444}
+	</style>
+
+</head>
+<body>
+	<div></div>
+
+	<script type="text/javascript" src="draggable.js"></script>
+	<script type="text/javascript">
+
+		var div = document.getElementsByTagName('div')[0];
+		new Drag(div);
+
+	</script>
+</body>
+</html>

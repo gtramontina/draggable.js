@@ -1,144 +1,212 @@
-!(function(moduleName, definition) {
-    // Whether to expose Draggable as an AMD module or to the global object.
-    if (typeof define === 'function' && typeof define.amd === 'object') define(definition);
-    else this[moduleName] = definition();
+function Draggable(element, handle, opts) {
 
-})('draggable', function definition() {
-    var currentElement;
-    var fairlyHighZIndex = '10';
-    
-    function draggable(element, handle) {
-        handle = handle || element;
-        setPositionType(element);
-        setDraggableListeners(element);
-        handle.addEventListener('mousedown', function(event) {
-            startDragging(event, element);
-        });
-    }
+	'use strict';
 
-    function setPositionType(element) {
-        element.style.position = 'absolute';
-    }
+	// options
+	this.options = {
+		setCursor: true,	// change cursor to reflect draggable?
+		setPosition: true,	// change draggable position to absolute?
+		direction: {		// which directions to enable drag in
+			x: true,		// true|false
+			y: true			// true|false
+		},
+		limit: {			// limit the drag bounds
+			x: null,		// [minimum position, maximum position]
+			y: null			// [minimum position, maximum position]
+		},
+		onDrag: null,		// function(element, X position, Y position, event)
+		onDragStart: null,	// function(element, X position, Y position, event)
+		onDragEnd: null		// function(element, X position, Y position, event)
+	};
 
-    function setDraggableListeners(element) {
-        element.draggableListeners = {
-            start: [],
-            drag: [],
-            stop: []
-        };
-        element.whenDragStarts = addListener(element, 'start');
-        element.whenDragging = addListener(element, 'drag');
-        element.whenDragStops = addListener(element, 'stop');
-    }
+	var options = this.options;
 
-    function startDragging(event, element) {
-        currentElement && sendToBack(currentElement);
-        currentElement = bringToFront(element);
-        
+	// set user-defined options
+	
+	for (var opt in opts) {
+		if (options.hasOwnProperty(opt)) {
+			options[opt] = opts[opt];
+		}
+	}
 
-        var initialPosition = getInitialPosition(currentElement);
-        currentElement.style.left = inPixels(initialPosition.left);
-        currentElement.style.top = inPixels(initialPosition.top);
-        currentElement.lastXPosition = event.clientX;
-        currentElement.lastYPosition = event.clientY;
+	// internal vars
+	var cursorOffsetX, cursorOffsetY, elementHeight, elementWidth;
+	var self = this;
+	var isIE = navigator.appName === 'Microsoft Internet Explorer';
+	var hasTouch = ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch;
 
-        var okToGoOn = triggerEvent('start', { x: initialPosition.left, y: initialPosition.top, mouseEvent: event });
-        if (!okToGoOn) return;
+	// public vars
+	this.element = handle || element;
+	this.X = 0;
+	this.Y = 0;
 
-        addDocumentListeners();
-    }
+	this.move = function(x ,y) {
+		var style = this.element.style;
+		var direction = options.direction;
+		var limit = options.limit;
+		var lowIsOk, highIsOk;
 
-    function addListener(element, type) {
-        return function(listener) {
-            element.draggableListeners[type].push(listener);
-        };
-    }
+		if (direction.x) {
+			if (limit.x !== null) {
+				lowIsOk  = x > limit.x[0];
+				highIsOk = x + elementWidth <= limit.x[1];
+			}
+			else lowIsOk = highIsOk = 1;
 
-    function triggerEvent(type, args) {
-        var result = true;
-        var listeners = currentElement.draggableListeners[type];
-        for (var i = listeners.length - 1; i >= 0; i--) {
-            if (listeners[i](args) === false) result = false;
-        };
-        return result;
-    }
+			self.X = x;
+			style.left =
+				lowIsOk && highIsOk ? x + 'px' : (!lowIsOk ? 0 : (limit.x[1]-elementWidth) + 'px');
+		}
 
-    function sendToBack(element) {
-        var decreasedZIndex = fairlyHighZIndex - 1;
-        element.style['z-index'] = decreasedZIndex;
-        element.style['zIndex'] = decreasedZIndex;
-    }
+		if (direction.y) {
+			if (limit.y !== null) {
+				lowIsOk  = y > limit.y[0],
+				highIsOk = y + elementHeight <= limit.y[1];
+			}
+			else lowIsOk = highIsOk = 1;
 
-    function bringToFront(element) {
-        element.style['z-index'] = fairlyHighZIndex;
-        element.style['zIndex'] = fairlyHighZIndex;
-        return element;
-    }
+			self.Y = y;
+			style.top = lowIsOk && highIsOk ? y + 'px' : (!lowIsOk ? 0 : (limit.y[1]-elementHeight) + 'px');
+		}
+	};
+	
+	var init = function() {
+		// set the element
+		var element = self.element;
+		if (!element) throw new Error('Invalid element passed to draggable: ' + element);
 
-    function addDocumentListeners() {
-        document.addEventListener('selectstart', cancelDocumentSelection);
-        document.addEventListener('mousemove', repositionElement);
-        document.addEventListener('mouseup', removeDocumentListeners);
-    }
+		// get element dimensions
+		var compStyle = getStyle(element);
+		elementHeight = nopx(compStyle.height);
+		elementWidth = nopx(compStyle.width);
 
-    function getInitialPosition(element) {
-        var top = 0;
-        var left = 0;
-        var currentElement = element;
-        do {
-            top += currentElement.offsetTop;
-            left +=  currentElement.offsetLeft;
-        } while (currentElement = currentElement.offsetParent);
+		// optional styling
+		var style = element.style;
+		if (options.setPosition) {
+			style.left = element.offsetLeft + 'px';
+			style.top = element.offsetTop + 'px';
+			style.right = 'auto';
+			style.bottom = 'auto';
+			style.position = 'absolute';
+		}
+		if (options.setCursor) style.cursor = 'move';
 
-        var computedStyle = getComputedStyle? getComputedStyle(element) : false;
-        if (computedStyle) {
-            left = left - (parseInt(computedStyle['margin-left']) || 0) - (parseInt(computedStyle['border-left']) || 0);
-            top = top - (parseInt(computedStyle['margin-top']) || 0) - (parseInt(computedStyle['border-top']) || 0);
-        }
+		// attach mousedown event
+		addEvent(element, (hasTouch ? 'touchstart' : 'mousedown'), start);
+	};
 
-        return {
-            top: top,
-            left: left
-        };
-    }
+	var start = function(e) {
+		// cross-browser event
+		var ev = e || window.event;
 
-    function inPixels(value) {
-        return value + 'px';
-    }
+		// prevent browsers from visually dragging the element's outline
+		stopEvent(ev);
 
-    function cancelDocumentSelection(event) {
-        event.preventDefault && event.preventDefault();
-        event.stopPropagation && event.stopPropagation();
-        event.returnValue = false;
-        return false;
-    }
+		// set a high z-index, just in case
+		var element = self.element;
+		element.oldZindex = element.style.zIndex;
+		element.style.zIndex = 10000;
 
-    function repositionElement(event) {
-        var style = currentElement.style;
-        var elementXPosition = parseInt(style.left, 10);
-        var elementYPosition = parseInt(style.top, 10);
+		// set initial position
+		var initialPosition = getInitialPosition(element);
+		cursorOffsetX = (self.X=initialPosition.x) - (hasTouch ? ev.targetTouches[0] : ev).clientX;
+		cursorOffsetY = (self.Y=initialPosition.y) - (hasTouch ? ev.targetTouches[0] : ev).clientY;
 
-        var elementNewXPosition = elementXPosition + (event.clientX - currentElement.lastXPosition);
-        var elementNewYPosition = elementYPosition + (event.clientY - currentElement.lastYPosition);
+		// add event listeners
+		var doc = document;
+		addEvent(doc, 'selectstart', stopEvent);
+		if (hasTouch) {
+			addEvent(doc, 'touchmove', drag);
+			addEvent(doc, 'touchend', stop);
+		}
+		else {
+			addEvent(doc, 'mousemove', drag);
+			addEvent(doc, 'mouseup', stop);
+		}
 
-        style.left = inPixels(elementNewXPosition);
-        style.top = inPixels(elementNewYPosition);
+		// trigger start event
+		if (options.onDragStart) options.onDragStart(element, self.X, self.Y, ev);
+	};
 
-        currentElement.lastXPosition = event.clientX;
-        currentElement.lastYPosition = event.clientY;
+	var drag = function(e) {
+		// cross-browser event
+		var ev = e || window.event;
 
-        triggerEvent('drag', { x: elementNewXPosition, y: elementNewYPosition, mouseEvent: event });
-    }
+		// compute new coordinates
+		var x = (hasTouch ? ev.targetTouches[0] : ev).clientX + cursorOffsetX;
+		var y = (hasTouch ? ev.targetTouches[0] : ev).clientY + cursorOffsetY;
 
-    function removeDocumentListeners(event) {
-        document.removeEventListener('selectstart', cancelDocumentSelection);
-        document.removeEventListener('mousemove', repositionElement);
-        document.removeEventListener('mouseup', removeDocumentListeners);
+		// move the element
+		self.move(x, y);
 
-        var left = parseInt(currentElement.style.left, 10);
-        var top = parseInt(currentElement.style.top, 10);
-        triggerEvent('stop', { x: left, y: top, mouseEvent: event });
-    }
+		// trigger drag event
+		if (options.onDrag) options.onDrag(self.element, x, y, ev);
+	};
 
-    return draggable;
-});
+	var stop = function(e) {
+		// cross-browser event
+		var ev = e || window.event;
+
+		// remove event listeners
+		var doc = document;
+		removeEvent(doc, 'selectstart', stopEvent);
+		if (hasTouch) {
+			removeEvent(doc, 'touchmove', drag);
+			removeEvent(doc, 'touchend', stop);
+		}
+		else {
+			removeEvent(doc, 'mousemove', drag);
+			removeEvent(doc, 'mouseup', stop);
+		}
+
+		// resent element's z-index
+		self.element.style.zIndex = self.element.oldZindex;
+
+		// trigger dragend event
+		if (options.onDragEnd) options.onDragEnd(self.element, self.X, self.Y, ev);
+	};
+
+	var getInitialPosition = function(element) {
+
+		var top = 0;
+		var left = 0;
+		var i = element;
+
+		// compute element offset relative to the window
+		do {
+			top += i.offsetTop;
+			left +=  i.offsetLeft;
+		} while (i = i.offsetParent && !getStyle(i.parentNode).position);
+
+		// subtract margin and border widths
+		var style = getStyle(element);
+		if (style) {
+			left -= (nopx(style.marginLeft) || 0) - (nopx(style.borderLeftWidth) || 0);
+			top -= (nopx(style.marginTop) || 0) - (nopx(style.borderTopWidth) || 0);
+		}
+
+		return {x: left, y: top};
+	};
+
+	function addEvent(element, e, func) {
+		return isIE ? element.attachEvent('on'+e, func) : element.addEventListener(e, func, false);
+	}
+
+	function removeEvent(element, e, func) {
+		return isIE ? element.detachEvent('on'+e, func) : element.removeEventListener(e, func, false);
+	}
+
+	function getStyle(element) {
+		return isIE ? element.currentStyle : getComputedStyle(element);
+	}
+
+	var nopx = function(string) {
+		return parseInt(string, 10);
+	};
+
+	var stopEvent = function(e) {
+		isIE ? e.returnValue = false : e.preventDefault();
+	};
+
+	init();
+}
