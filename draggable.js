@@ -8,6 +8,11 @@
     var fairlyHighZIndex = '10';
     
     function draggable(element, handle) {
+        var i = 0; // i is hoist, so we're better off declaring it here
+        if(element.length) { // any kind of list has a length property
+            for(; i < element.length; i++) draggable(element[i], handle); // continue the normal flow
+            return; // the rest of draggable can not handle a list, so exit
+        }
         handle = handle || element;
         setPositionType(element);
         setDraggableListeners(element);
