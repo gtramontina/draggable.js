@@ -29,3 +29,6 @@ If you find any incompatibility or want to support other browsers, please do a p
 
 ### License
 This is licensed under the feel-free-to-do-whatever-you-want-to-do license.
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/gtramontina/draggable.js/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
