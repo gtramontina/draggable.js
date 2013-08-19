@@ -4,7 +4,7 @@
 * { box-sizing: border-box; }
 
 html {
-  background-image: url(http://subtlepatterns.com/patterns/random_grey_variations.png);
+  background-image: url('background.png');
   color: white;
   font-weight: 100;
   font-family: 'Roboto', sans-serif;
@@ -100,6 +100,13 @@ body > article > section > h1 {
   border-radius: 2px;
   padding: 5px;
   overflow: scroll;
+}
+
+#tests > iframe {
+  width: 100%;
+  min-height: 500px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 2px;
 }
 
 /*--------------------------------------------------------------
