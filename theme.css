@@ -1,0 +1,112 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,100);
+@import url(http://fonts.googleapis.com/css?family=Source+Code+Pro:300);
+
+* { box-sizing: border-box; }
+
+html {
+  background-image: url(http://subtlepatterns.com/patterns/random_grey_variations.png);
+  color: white;
+  font-weight: 100;
+  font-family: 'Roboto', sans-serif;
+}
+
+body > header {
+  margin-bottom: 20px;
+  padding: 10px;
+  width: 100%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+a {
+  text-decoration:  none;
+  color: orange;
+}
+
+a:hover {
+  color: rgb(255, 191, 0);
+}
+
+body > header > h1 {
+  margin-bottom: 5px;
+  font-size: 55px;
+  color: rgb(255, 191, 0);
+}
+
+body > header > h2 {
+  font-size: 18px;
+}
+
+body > article {
+  margin: 0 auto;
+  width: 90%;
+}
+
+body > article > section {
+  margin-bottom: 40px;
+}
+
+body > article > section > h1 {
+  margin-bottom: 30px;
+  font-size: 30px;
+}
+
+#examples > ol > li {
+  margin-bottom: 20px;
+  display: block;
+  overflow: auto;
+  min-height: 100px;
+}
+
+#examples > ol > li > div {
+  display: inline-block;
+  float: left;
+  padding: 10px;
+  min-height: 100px;
+  width: 25%;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+  text-align: center;
+  background-color: rgba(98, 199, 0, 0.7);
+}
+
+#examples > ol > li:nth-child(1) > div,
+#examples > ol > li:nth-child(2) > div > span,
+#examples > ol > li:nth-child(3) > div {
+  cursor: move;
+}
+
+#examples > ol > li > div:active {
+  background-color: rgba(98, 199, 0, 0.5);
+}
+
+#examples > ol > li > div > span {
+  display: block;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 5px;
+  margin-bottom: 5px;
+  border-radius: 2px;
+}
+
+#examples > ol > li > code {
+  display: inline-block;
+  float: right;
+  width: 70%;
+  vertical-align: top;
+  font-size: 15px;
+  font-family: 'Source Code Pro', monospace;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 2px;
+  padding: 5px;
+  overflow: scroll;
+}
+
+/*--------------------------------------------------------------
+ Javascript
+ --------------------------------------------------------------*/
+code.javascript span.comment   { color: #66cc33;  }
+code.javascript span.string    { color: #DFC484;  }
+code.javascript span.keywords  { color: #C9783E;  }
+code.javascript span.brackets  { color: #999999;  }
+code.javascript span.global    { color: #C9783E;  }

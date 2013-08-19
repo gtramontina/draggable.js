@@ -1,124 +1,82 @@
-<html>
-<head>
-    <title>Draggable.js</title>
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Droid+Serif">
-    <link rel="stylesheet" href="https://raw.github.com/indexzero/code-highlighter/master/syntax.css">
-    <link rel="stylesheet" href="stylesheet.css">
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>draggable.js</title>
 
-    <script src="https://raw.github.com/gtramontina/draggable.js/master/draggable.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="reset.css">
+    <link rel="stylesheet" type="text/css" href="theme.css">
 
-    <script src="https://raw.github.com/ded/reqwest/master/reqwest.min.js"></script>
-    <script src="https://raw.github.com/LeaVerou/prefixfree/master/prefixfree.min.js"></script>
-    <script src="https://raw.github.com/indexzero/code-highlighter/master/code-highlighter.js"></script>
-    <script src="https://raw.github.com/indexzero/code-highlighter/master/languages/javascript.js"></script>
-</head>
-<body>
+    <script src="https://rawgithub.com/gtramontina/draggable.js/master/draggable.min.js"></script>
 
-    <a href="http://github.com/gtramontina/draggable.js"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/4c7dc970b89fd04b81c8e221ba88ff99a06c6b61/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f77686974655f6666666666662e706e67" alt="Fork me on GitHub"></a>
+    <script src="https://raw.github.com/LeaVerou/prefixfree/gh-pages/prefixfree.min.js"></script>
+    <script src="https://rawgithub.com/ded/reqwest/master/reqwest.min.js"></script>
+    <script src="https://rawgithub.com/indexzero/code-highlighter/master/code-highlighter.js"></script>
+    <script src="https://rawgithub.com/indexzero/code-highlighter/master/languages/javascript.js"></script>
+  </head>
+  <body>
 
-    <header class="depressed">
-        <a href="https://raw.github.com/gtramontina/draggable.js/master/draggable.min.js" class="minified"></a>
-        <h1>Draggable.js</h1>
-        <h2>Make your DOM elements draggable</h2>
+    <header>
+      <h1>draggable.js</h1>
+      <h2>Make your DOM elements draggable</h2>
     </header>
 
-    <p>It always goes like this:</p>
-    <p>You need to do a small and specific thing in your brand new toy project. Then you google a little, dig GitHub and find nothing. So you go ahead and write your own tiny little lib. When you are about to make it public, you stumble upon a <a href="http://kbjr.github.com/DragDrop/">lib</a> that does exactly what you needed. Dammit! Too late...</p>
-    <p>Anyway, here it is. A library that makes your life easier when you want your elements do be draggable. Take a look at a few examples:</p>
-
-    <!-- Example #1: Free bounds -->
-    <div class="example">
-        <div class="container">
-            <div id="free_bounds" class="draggable">
-                <span>#free_bounds</span>
+    <article>
+      <section id="examples">
+        <h1>Show me some code, will ya?</h1>
+        <ol>
+          <li>
+            <div id="free-bounds">
+              <span>#free-bounds</span>
             </div>
-        </div>
+            <code class="javascript"><pre>
+var freeBounds = document.getElementById('free-bounds');
+draggable(freeBounds);
+            </pre></code>
+          </li>
 
-        <div class="source depressed">
-            <pre><code class="javascript">
-var free_bounds = document.getElementById('free_bounds');
-draggable(free_bounds);
-            </code></pre>
-        </div>
-    </div>
-
-    <!-- Example #2: With a handle -->
-    <div class="example">
-        <div class="container">
-            <div id="with_handle" class="draggable">
-                <span>#with_handle</span>
+          <li>
+            <div id="with-handle">
+              <span>#with-handle</span>
             </div>
-        </div>
+            <code class="javascript"><pre>
+var withHandle = document.getElementById('with-handle');
+draggable(withHandle, withHandle.getElementsByTagName('span')[0]);
+            </pre></code>
+          </li>
 
-        <div class="source depressed">
-            <pre><code class="javascript">
-var with_handle = document.getElementById('with_handle');
-draggable(with_handle, with_handle.getElementsByTagName('span')[0]);
-            </code></pre>
-        </div>
-    </div>
-
-    <!-- Example #3: Events! -->
-    <div class="example">
-        <div class="container">
-            <div id="events" class="draggable">
-                <span>#events</span>
-                <p class="info"></p>
+          <li>
+            <div id="events">
+              <span>#events</span>
+              <p></p>
             </div>
-        </div>
-
-        <div class="source depressed">
-            <pre><code class="javascript">
+            <code class="javascript"><pre>
 var events = document.getElementById('events');
 var info = events.getElementsByTagName('p')[0];
 draggable(events);
-function setInfo(type) {
-    return function(event) { info.innerHTML = type + ': ' + event.x + ', ' + event.y; }
-}
+
+var setInfo = function(type) { return function(event) {
+  info.innerHTML = type + ': ' + event.x + ', ' + event.y;
+}};
+
 events.whenDragStarts(setInfo('Start'));
 events.whenDragging(setInfo('Dragging'));
 events.whenDragStops(setInfo('Stop'));
-            </code></pre>
-        </div>
-    </div>
+            </pre></code>
+          </li>
+        </ol>
+      </section>
 
-    <div id="unittests">
-        <p>Unit Tests (<a href="https://github.com/gtramontina/draggable.js/tree/master/test">source</a>):</p>
-    </div>
-        
-    <script>
-        !(function() {
-            // Execute whatever is inside the <code> tags.
-            var examples = document.getElementsByClassName('example');
-            for (var i = examples.length - 1; i >= 0; i--) {
-                var example = examples[i];
-                var source = example.getElementsByClassName('source')[0];
-                var source = source.textContent || source.innerText;
-                eval(source);
-            };
+      <section id="tests">
+        <h1>Look, ma! Tests! (<a href="https://github.com/gtramontina/draggable.js/tree/master/test">source</a>)</h1>
+      </section>
+    </article>
 
-            // Load unit tests
-            var testPage = 'https://raw.github.com/gtramontina/draggable.js/master/test/test.html';
-            var testSpec = 'https://raw.github.com/gtramontina/draggable.js/master/test/draggable.test.js';
-            var source = 'https://raw.github.com/gtramontina/draggable.js/master/draggable.js';
-            reqwest({
-                url: 'http://anyorigin.com/get?url='+testPage+'&callback=?',
-                type: 'jsonp',
-                success: function(data) {
-                    var body = data.contents;
-                    body = body
-                        .replace('src="../draggable.js"', 'src="'+source+'"')
-                        .replace('src="draggable.test.js"', 'src="'+testSpec+'"');
-                    
-                    var iframe = document.getElementById('unittests').appendChild(document.createElement('iframe'));
-                    iframe.classList.add('depressed');
-                    iframe.classList.add('unittests');
-                    var iframeDocument = iframe.contentWindow.document;
-                    iframeDocument.open().write(body);
-                    iframeDocument.close();
-                }
-            });
-        })();
-    </script>
-</body>
+    <footer>
+    </footer>
+
+  </body>
+
+  <script src="run.examples.js"></script>
+  <script src="run.tests.js"></script>
 </html>
