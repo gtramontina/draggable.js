@@ -1,5 +1,6 @@
 # Draggable.js #
 ##### Make your dom elements draggable easily. #####
+[![Build Status](https://travis-ci.org/gtramontina/draggable.js.png)](https://travis-ci.org/gtramontina/draggable.js)
 
 ### Examples
 DOM:
@@ -16,7 +17,7 @@ To make the whole element draggable:
 To make it draggable only when dragging the handle element:
 
     var elementToDrag = document.getElementById('elementToDrag');
-    var handle = elementToDrag.getElementsByClassName('handle')[0];    
+    var handle = elementToDrag.getElementsByClassName('handle')[0];
     draggable(elementToDrag, handle);
 
 #### Notes
