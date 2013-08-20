@@ -1,0 +1,11 @@
+{
+  "name"              : "draggable.js",
+  "version"           : "1.0.0",
+  "description"       : "Make your DOM elements draggable easily",
+  "keywords"          : [ "microjs", "drag", "draggable" ],
+  "author"            : "Guilherme J. Tramontina <guilherme.tramontina@gmail.com>",
+  "devDependencies"   : {
+    "phantomjs"       : "1.9",
+    "mocha-phantomjs" : "3.1"
+  }
+}

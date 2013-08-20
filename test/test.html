@@ -1,18 +1,18 @@
 <html>
 <head>
     <title>Draggable.js</title>
-    <link rel="stylesheet" href="https://rawgithub.com/visionmedia/mocha/master/mocha.css" />
+    <link rel="stylesheet" href="lib/mocha.css" />
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="https://rawgithub.com/LearnBoost/expect.js/d2440da086bf8dc38c6085641f23b968a0f48b29/expect.js"></script>
-    <script src="https://rawgithub.com/tmcw/happen/master/happen.js"></script>
-    <script src="https://rawgithub.com/visionmedia/mocha/master/mocha.js"></script>
+    <script src="lib/jquery.min.js"></script>
+    <script src="lib/expect.js"></script>
+    <script src="lib/happen.js"></script>
+    <script src="lib/mocha.js" charset="UTF-8"></script>
 
     <script>
         mocha.setup('bdd');
         $(function() {
             $('body').append('<div id="mocha">');
-            mocha.run();
+            (window.mochaPhantomJS || mocha).run();
         });
     </script>
 

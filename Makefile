@@ -1,6 +1,13 @@
 source = draggable.js
 minified = draggable.min.js
 
+install:
+	@npm install
+
+test:
+	@./node_modules/.bin/mocha-phantomjs \
+		test/test.html
+
 minify:
 	@echo "> Minifying..."
 	@rm -f $(minified)
@@ -13,4 +20,4 @@ minify:
 		-o $(minified) \
 		http://closure-compiler.appspot.com/compile
 
-.PHONY: minify
+.PHONY: install test minify
