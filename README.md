@@ -1,5 +1,5 @@
 # Draggable.js #
-##### Make your dom elements draggable easily. #####
+##### Make your DOM elements draggable easily #####
 [![Build Status](https://travis-ci.org/gtramontina/draggable.js.png)](https://travis-ci.org/gtramontina/draggable.js)
 
 ### Examples
