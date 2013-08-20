@@ -1,0 +1,14 @@
+{
+  "name"              : "draggable.js",
+  "version"           : "1.0.0",
+  "description"       : "Make your DOM elements draggable easily",
+  "keywords"          : [ "microjs", "drag", "draggable" ],
+  "authors"           : [ "Guilherme J. Tramontina <guilherme.tramontina@gmail.com>" ],
+  "homepage"          : "https://github.com/gtramontina/draggable.js",
+  "main"              : "draggable.min.js",
+  "ignore"            : [
+    "**/.*",
+    "node_modules",
+    "test"
+  ]
+}
