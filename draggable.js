@@ -10,11 +10,11 @@
     top: 0,
     left: 0
   };
-  // var Event = function(x, y, mouseevent) {
-  //   this.x = x;
-  //   this.y = y,
-  //   mouseEvent: mouseevent
-  // }
+  var DraggableEvent = function(x, y, mouseevent) {
+    this.x = x;
+    this.y = y;
+    this.mouseEvent = mouseevent;
+  }
 
   function draggable(element, handle) {
     handle = handle || element;
@@ -51,7 +51,7 @@
     currentElement.lastXPosition = event.clientX;
     currentElement.lastYPosition = event.clientY;
 
-    var okToGoOn = triggerEvent('start', { x: initialPosition.left, y: initialPosition.top, mouseEvent: event });
+    var okToGoOn = triggerEvent('start', new DraggableEvent(initialPosition.left, initialPosition.top, event));
     if (!okToGoOn) return;
 
     addDocumentListeners();
@@ -122,7 +122,7 @@
     currentElement.lastXPosition = event.clientX;
     currentElement.lastYPosition = event.clientY;
 
-    triggerEvent('drag', { x: elementNewXPosition, y: elementNewYPosition, mouseEvent: event });
+    triggerEvent('drag', new DraggableEvent(elementNewXPosition, elementNewYPosition, event));
   }
 
   function removeDocumentListeners(event) {
@@ -132,7 +132,7 @@
 
     var left = parseInt(currentElement.style.left, 10);
     var top = parseInt(currentElement.style.top, 10);
-    triggerEvent('stop', { x: left, y: top, mouseEvent: event });
+    triggerEvent('stop', new DraggableEvent(left,top, event));
   }
 
   return draggable;
