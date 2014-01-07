@@ -6,6 +6,15 @@
 })('draggable', function definition() {
   var currentElement;
   var fairlyHighZIndex = '10';
+  var rectStruct = {
+    top: 0,
+    left: 0
+  };
+  // var Event = function(x, y, mouseevent) {
+  //   this.x = x;
+  //   this.y = y,
+  //   mouseEvent: mouseevent
+  // }
 
   function draggable(element, handle) {
     handle = handle || element;
@@ -82,24 +91,10 @@
   }
 
   function getInitialPosition(element) {
-    var top = 0;
-    var left = 0;
-    var currentElement = element;
-    do {
-      top += currentElement.offsetTop;
-      left += currentElement.offsetLeft;
-    } while (currentElement = currentElement.offsetParent);
-
-    var computedStyle = getComputedStyle? getComputedStyle(element) : false;
-    if (computedStyle) {
-      left = left - (parseInt(computedStyle['margin-left']) || 0) - (parseInt(computedStyle['border-left']) || 0);
-      top = top - (parseInt(computedStyle['margin-top']) || 0) - (parseInt(computedStyle['border-top']) || 0);
-    }
-
-    return {
-      top: top,
-      left: left
-    };
+    var boundingClientRect = element.getBoundingClientRect();
+    rectStruct.top = boundingClientRect.top;
+    rectStruct.left = boundingClientRect.left;
+    return rectStruct;
   }
 
   function inPixels(value) {
