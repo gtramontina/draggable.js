@@ -1,12 +1,13 @@
 describe('Draggable.js', function() {
   var draggableBox;
+  var draggableParent;
   var initialPosition = {
     top: 100,
     left: 100
   };
 
   beforeEach(function() {
-    draggableBox = $('<div style="width:100px;height:100px;">');
+    draggableBox = $('<div style="width:100px;height:100px;">');    
     draggableBox.css(initialPosition);
     $('body').append(draggableBox);
     draggableBox = draggableBox.get(0);
@@ -14,6 +15,7 @@ describe('Draggable.js', function() {
 
   afterEach(function() {
     $(draggableBox).remove();
+    $(draggableParent).remove();
   });
 
   it('when making an element draggable, should set its position as absolute', function() {
@@ -23,6 +25,20 @@ describe('Draggable.js', function() {
 
   describe('when dragging an element to a new position', function() {
     it('should update the element\'s position', function() {
+      draggable(draggableBox);
+      dragElementTo(draggableBox, [310, 220]);
+
+      var actualPosition = $(draggableBox).position();
+      expect(actualPosition.top).to.be(220);
+      expect(actualPosition.left).to.be(310);
+    });
+
+    it('should update the element\'s position correctly within an absolute element', function() {
+      draggableParent = $('<div style="position:absolute;left:100px;top:100px;">');
+      draggableParent.append(draggableBox);
+      $('body').append(draggableParent);
+      draggableParent = draggableParent.get(0);
+
       draggable(draggableBox);
       dragElementTo(draggableBox, [310, 220]);
 
