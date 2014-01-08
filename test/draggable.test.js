@@ -7,7 +7,7 @@ describe('Draggable.js', function() {
   };
 
   beforeEach(function() {
-    draggableBox = $('<div style="width:100px;height:100px;">');    
+    draggableBox = $('<div style="width:100px;height:100px;">');
     draggableBox.css(initialPosition);
     $('body').append(draggableBox);
     draggableBox = draggableBox.get(0);
