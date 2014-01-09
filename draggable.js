@@ -6,15 +6,6 @@
 })('draggable', function definition() {
   var currentElement;
   var fairlyHighZIndex = '10';
-  var rectStruct = {
-    top: 0,
-    left: 0
-  };
-  var DraggableEvent = function(x, y, mouseevent) {
-    this.x = x;
-    this.y = y;
-    this.mouseEvent = mouseevent;
-  }
 
   function draggable(element, handle) {
     handle = handle || element;
@@ -51,7 +42,7 @@
     currentElement.lastXPosition = event.clientX;
     currentElement.lastYPosition = event.clientY;
 
-    var okToGoOn = triggerEvent('start', new DraggableEvent(initialPosition.left, initialPosition.top, event));
+    var okToGoOn = triggerEvent('start', { x: initialPosition.left, y: initialPosition.top, mouseEvent: event });
     if (!okToGoOn) return;
 
     addDocumentListeners();
@@ -92,9 +83,10 @@
 
   function getInitialPosition(element) {
     var boundingClientRect = element.getBoundingClientRect();
-    rectStruct.top = boundingClientRect.top;
-    rectStruct.left = boundingClientRect.left;
-    return rectStruct;
+    return {
+      top: boundingClientRect.top,
+      left: boundingClientRect.left
+    };
   }
 
   function inPixels(value) {
@@ -122,7 +114,7 @@
     currentElement.lastXPosition = event.clientX;
     currentElement.lastYPosition = event.clientY;
 
-    triggerEvent('drag', new DraggableEvent(elementNewXPosition, elementNewYPosition, event));
+    triggerEvent('drag', { x: elementNewXPosition, y: elementNewYPosition, mouseEvent: event });
   }
 
   function removeDocumentListeners(event) {
@@ -132,7 +124,7 @@
 
     var left = parseInt(currentElement.style.left, 10);
     var top = parseInt(currentElement.style.top, 10);
-    triggerEvent('stop', new DraggableEvent(left,top, event));
+    triggerEvent('stop', { x: left, y: top, mouseEvent: event });
   }
 
   return draggable;
