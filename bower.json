@@ -5,7 +5,7 @@
   "keywords"          : [ "microjs", "drag", "draggable" ],
   "authors"           : [ "Guilherme J. Tramontina <guilherme.tramontina@gmail.com>" ],
   "homepage"          : "https://github.com/gtramontina/draggable.js",
-  "main"              : "draggable.min.js",
+  "main"              : "draggable.js",
   "ignore"            : [
     "**/.*",
     "node_modules",
