@@ -36,8 +36,8 @@ describe('Draggable.js', function() {
     it('should bring the element to front', function() {
       draggable(draggableBox);
       dragElementTo(draggableBox);
-
-      expect($(draggableBox).css('z-index')).to.be(fairlyHighZIndex);
+      // in IE11 $(draggableBox).css('z-index') is a number
+      expect(String($(draggableBox).css('z-index'))).to.be(fairlyHighZIndex);
     });
 
     it('should send the previous element to back', function() {
@@ -50,7 +50,8 @@ describe('Draggable.js', function() {
 
       dragElementTo(draggableBox, 0, 0);
       var decreasedZIndex = fairlyHighZIndex - 1 + '';
-      expect($(previousElement).css('z-index')).to.be(decreasedZIndex);
+      // in IE11 $(previousElement).css('z-index') is a number
+      expect(String($(previousElement).css('z-index'))).to.be(decreasedZIndex);
     });
 
     describe('should trigger events', function() {

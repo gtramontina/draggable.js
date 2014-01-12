@@ -82,23 +82,10 @@
   }
 
   function getInitialPosition(element) {
-    var top = 0;
-    var left = 0;
-    var currentElement = element;
-    do {
-      top += currentElement.offsetTop;
-      left += currentElement.offsetLeft;
-    } while (currentElement = currentElement.offsetParent);
-
-    var computedStyle = getComputedStyle? getComputedStyle(element) : false;
-    if (computedStyle) {
-      left = left - (parseInt(computedStyle['margin-left']) || 0) - (parseInt(computedStyle['border-left']) || 0);
-      top = top - (parseInt(computedStyle['margin-top']) || 0) - (parseInt(computedStyle['border-top']) || 0);
-    }
-
+    var boundingClientRect = element.getBoundingClientRect();
     return {
-      top: top,
-      left: left
+      top: boundingClientRect.top,
+      left: boundingClientRect.left
     };
   }
 
