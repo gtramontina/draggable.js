@@ -4,6 +4,24 @@
   else this[moduleName] = definition();
 
 })('draggable', function definition() {
+  function addEventListener(element, eventName, handler) {
+                if (element.addEventListener) {
+                    element.addEventListener(eventName, handler, false);
+                } else if (element.attachEvent) {
+                    element.attachEvent('on' + eventName, handler);
+                } else {
+                    element['on' + eventName] = handler;
+                }
+            }
+  function removeEventListener(element, eventName, handler) {
+      if (element.addEventListener) {
+          element.removeEventListener(eventName, handler, false);
+      } else if (element.attachEvent) {
+          element.detachEvent('on' + eventName);
+      } else {
+          element['on' + eventName] = handler;
+      }
+  }
   var currentElement;
   var fairlyHighZIndex = '10';
 
@@ -11,7 +29,7 @@
     handle = handle || element;
     setPositionType(element);
     setDraggableListeners(element);
-    handle.addEventListener('mousedown', function(event) {
+    addEventListener(handle,'mousedown', function(event) {
       startDragging(event, element);
     });
   }
@@ -76,9 +94,9 @@
   }
 
   function addDocumentListeners() {
-    document.addEventListener('selectstart', cancelDocumentSelection);
-    document.addEventListener('mousemove', repositionElement);
-    document.addEventListener('mouseup', removeDocumentListeners);
+    addEventListener(document,'selectstart', cancelDocumentSelection);
+    addEventListener(document,'mousemove', repositionElement);
+    addEventListener(document,'mouseup', removeDocumentListeners);
   }
 
   function getInitialPosition(element) {
@@ -118,9 +136,9 @@
   }
 
   function removeDocumentListeners(event) {
-    document.removeEventListener('selectstart', cancelDocumentSelection);
-    document.removeEventListener('mousemove', repositionElement);
-    document.removeEventListener('mouseup', removeDocumentListeners);
+    removeEventListener(document,'selectstart',cancelDocumentSelection);
+    removeEventListener(document,'mousemove',repositionElement);
+    removeEventListener(document,'mouseup',removeDocumentListeners);
 
     var left = parseInt(currentElement.style.left, 10);
     var top = parseInt(currentElement.style.top, 10);
