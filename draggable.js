@@ -14,12 +14,12 @@
                 }
             }
   function removeEventListener(element, eventName, handler) {
-      if (element.addEventListener) {
+      if (element.removeEventListener) {
           element.removeEventListener(eventName, handler, false);
-      } else if (element.attachEvent) {
+      } else if (element.detachEvent) {
           element.detachEvent('on' + eventName);
       } else {
-          element['on' + eventName] = handler;
+          element['on' + eventName] = null;
       }
   }
   var currentElement;
