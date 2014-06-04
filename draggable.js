@@ -17,7 +17,7 @@
       if (element.removeEventListener) {
           element.removeEventListener(eventName, handler, false);
       } else if (element.detachEvent) {
-          element.detachEvent('on' + eventName);
+          element.detachEvent('on' + eventName,handler);
       } else {
           element['on' + eventName] = null;
       }
@@ -119,6 +119,7 @@
   }
 
   function repositionElement(event) {
+    event.returnValue = false;
     var style = currentElement.style;
     var elementXPosition = parseInt(style.left, 10);
     var elementYPosition = parseInt(style.top, 10);
