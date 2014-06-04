@@ -119,6 +119,7 @@
   }
 
   function repositionElement(event) {
+    event.preventDefault && event.preventDefault();
     event.returnValue = false;
     var style = currentElement.style;
     var elementXPosition = parseInt(style.left, 10);
