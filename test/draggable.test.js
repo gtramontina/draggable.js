@@ -1,4 +1,12 @@
 describe('Draggable.js', function() {
+    function getStyle(el, styleProp) {
+      var s='';
+        if (!!el['currentStyle'])
+            s = el.currentStyle[styleProp];
+        else if (window.getComputedStyle)
+            s = document.defaultView.getComputedStyle(el, null).getPropertyValue(styleProp);
+        return s;
+  }
   var draggableBox;
   var initialPosition = {
     top: 100,
@@ -32,7 +40,7 @@ describe('Draggable.js', function() {
     });
 
 
-    var fairlyHighZIndex = '10';
+    var fairlyHighZIndex = getStyle(draggableBox,'z-index');;
     it('should bring the element to front', function() {
       draggable(draggableBox);
       dragElementTo(draggableBox);
