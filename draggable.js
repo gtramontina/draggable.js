@@ -39,7 +39,15 @@
     setPositionType(element);
     setDraggableListeners(element);
     addEventListener(handle,'mousedown', function(event) {
-      startDragging(event, element);
+        if (event.which == null)
+        /* IE case */
+            button = (event.button < 2) ? "LEFT" :
+                ((event.button == 4) ? "MIDDLE" : "RIGHT");
+        else
+        /* All others */
+            button = (event.which < 2) ? "LEFT" :
+                ((event.which == 2) ? "MIDDLE" : "RIGHT");
+      button==='LEFT' && startDragging(event, element);
     });
   }
 
