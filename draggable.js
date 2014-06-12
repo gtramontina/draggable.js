@@ -24,7 +24,7 @@
   }
   function getStyle(el, styleProp) {
       var s='';
-        if (!!el['currentStyle'])
+        if (typeof el['currentStyle']==object)
             s = el.currentStyle[styleProp];
         else if (window.getComputedStyle)
             s = document.defaultView.getComputedStyle(el, null).getPropertyValue(styleProp);
