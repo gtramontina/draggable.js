@@ -22,15 +22,36 @@
           element['on' + eventName] = null;
       }
   }
+  function toCamelCase(s){
+    return s.replace(/(\-[a-z])/g, function($1){return $1.toUpperCase().replace('-','');});
+  }
+  function getStyle(el, styleProp) {
+      var s='';
+        if (typeof el['currentStyle']==='object')
+            s = el.currentStyle[toCamelCase(styleProp)];
+        else if (window.getComputedStyle)
+            s = document.defaultView.getComputedStyle(el, null).getPropertyValue(styleProp);
+        return s;
+  }
   var currentElement;
   var fairlyHighZIndex = '10';
 
   function draggable(element, handle) {
     handle = handle || element;
+    var index=parseInt(getStyle(element,'z-index'));
+    fairlyHighZIndex = isNaN(index)? '10' : index ;
     setPositionType(element);
     setDraggableListeners(element);
     addEventListener(handle,'mousedown', function(event) {
-      startDragging(event, element);
+        if (event.which == null)
+        /* IE case */
+            button = (event.button < 2) ? "LEFT" :
+                ((event.button == 4) ? "MIDDLE" : "RIGHT");
+        else
+        /* All others */
+            button = (event.which < 2) ? "LEFT" :
+                ((event.which == 2) ? "MIDDLE" : "RIGHT");
+      button==='LEFT' && startDragging(event, element);
     });
   }
 
@@ -100,10 +121,16 @@
   }
 
   function getInitialPosition(element) {
-    var boundingClientRect = element.getBoundingClientRect();
-    return {
-      top: boundingClientRect.top,
-      left: boundingClientRect.left
+  var rect={};
+    if(getStyle(element,'position')=='absolute'){
+        rect={top:parseInt(getStyle(element,'top')),left:parseInt(getStyle(element,'left'))};
+    }else{
+       rect = element.getBoundingClientRect();
+
+    }
+   return {
+      top: rect.top,
+      left: rect.left
     };
   }
 

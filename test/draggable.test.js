@@ -1,5 +1,13 @@
 describe('Draggable.js', function() {
-  var draggableBox;
+  var getStyle =function (el, styleProp) {
+      var s='';
+        if (el && typeof el.currentStyle==='object')
+            s = el.currentStyle[styleProp];
+        else if (window.getComputedStyle)
+            s = document.defaultView.getComputedStyle(el, null).getPropertyValue(styleProp);
+        return s;
+  };
+  var draggableBox,fairlyHighZIndex;
   var initialPosition = {
     top: 100,
     left: 100
@@ -7,9 +15,13 @@ describe('Draggable.js', function() {
 
   beforeEach(function() {
     draggableBox = $('<div style="width:100px;height:100px;">');
+    
     draggableBox.css(initialPosition);
     $('body').append(draggableBox);
+
     draggableBox = draggableBox.get(0);
+    var index=parseInt(getStyle(draggableBox,'z-index'));
+    fairlyHighZIndex = isNaN(index)? '10' : index ;
   });
 
   afterEach(function() {
@@ -32,7 +44,7 @@ describe('Draggable.js', function() {
     });
 
 
-    var fairlyHighZIndex = '10';
+    
     it('should bring the element to front', function() {
       draggable(draggableBox);
       dragElementTo(draggableBox);
