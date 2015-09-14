@@ -8,6 +8,7 @@
     "type"            : "git",
     "url"             : "https://github.com/gtramontina/draggable.js"
   },
+  "main": "draggable.js",
   "devDependencies"   : {
     "phantomjs"       : "1.9",
     "mocha-phantomjs" : "3.1"
