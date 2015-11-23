@@ -19,8 +19,8 @@
                     element['on' + eventName] = handler;
                   }
                 }
-            })(window);
-  var removeEventListener = ( function(w) {
+            })(window)
+  ,removeEventListener = ( function(w) {
       if (w.removeEventListener) {
         return function (element, eventName, handler){
           element.removeEventListener(eventName, handler, false);
@@ -34,11 +34,11 @@
           element['on' + eventName] = null;
         }
       }
-  })(window);
-  function toCamelCase(s){
+  })(window)
+  , toCamelCase = function (s){
     return s.replace(/(\-[a-z])/g, function($1){return $1.toUpperCase().replace('-','');});
   }
-  var getStyle = function (el, styleProp) {
+  , getStyle = function (el, styleProp) {
         if (typeof el['currentStyle']==='object'){
             getStyle = function (el, styleProp){
               var s='';
@@ -55,9 +55,9 @@
           }
       return getStyle(el, styleProp);
   }
-  var currentElement;
-  var fairlyHighZIndex = '10';
-  var whichButton = function(event){
+  , currentElement
+  , fairlyHighZIndex = '10'
+  , whichButton = function(event){
     if (event.which == null){
       whichButton = function(event){
         button = (event.button < 2) ? "LEFT" :
@@ -71,11 +71,12 @@
           return button;
       }
     }
-  }
+    return whichButton(event);
+  };
 
   function draggable(element, handle) {
     handle = handle || element;
-    var index=parseInt(getStyle(element,'z-index'));
+    var index = parseInt(getStyle(element,'z-index'));
     fairlyHighZIndex = isNaN(index)? '10' : index ;
     setPositionType(element);
     setDraggableListeners(element);
@@ -102,8 +103,6 @@
   function startDragging(event, element) {
     currentElement && sendToBack(currentElement);
     currentElement = bringToFront(element);
-
-
     var initialPosition = getInitialPosition(currentElement);
     currentElement.style.left = inPixels(initialPosition.left);
     currentElement.style.top = inPixels(initialPosition.top);

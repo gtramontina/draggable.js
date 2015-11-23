@@ -1,4 +1,7 @@
 describe('Draggable.js', function() {
+    function toCamelCase(s){
+    return s.replace(/(\-[a-z])/g, function($1){return $1.toUpperCase().replace('-','');});
+  }
     var getStyle = function (el, styleProp) {
         if (typeof el['currentStyle']==='object'){
             getStyle = function (el, styleProp){
