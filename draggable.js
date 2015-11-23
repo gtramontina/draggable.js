@@ -5,37 +5,73 @@
   else this[moduleName] = definition();
 
 })('draggable', function definition() {
-  function addEventListener(element, eventName, handler) {
-                if (element.addEventListener) {
-                    element.addEventListener(eventName, handler, false);
-                } else if (element.attachEvent) {
-                    element.attachEvent('on' + eventName, handler);
+  var addEventListener = ( function (w) {
+                if (w.addEventListener) {
+                    return function (element, eventName, handler){
+                      element.addEventListener(eventName, handler, false);
+                    }
+                } else if (w.attachEvent) {
+                    return function (element, eventName, handler){
+                      element.attachEvent('on' + eventName, handler);
+                    } 
                 } else {
+                  return function (element, eventName, handler){
                     element['on' + eventName] = handler;
+                  }
                 }
-            }
-  function removeEventListener(element, eventName, handler) {
-      if (element.removeEventListener) {
+            })(window);
+  var removeEventListener = ( function(w) {
+      if (w.removeEventListener) {
+        return function (element, eventName, handler){
           element.removeEventListener(eventName, handler, false);
-      } else if (element.detachEvent) {
+        }
+      } else if (w.detachEvent) {
+        return function (element, eventName, handler){
           element.detachEvent('on' + eventName,handler);
+        }
       } else {
+        return function (element, eventName, handler){
           element['on' + eventName] = null;
+        }
       }
-  }
+  })(window);
   function toCamelCase(s){
     return s.replace(/(\-[a-z])/g, function($1){return $1.toUpperCase().replace('-','');});
   }
-  function getStyle(el, styleProp) {
-      var s='';
-        if (typeof el['currentStyle']==='object')
-            s = el.currentStyle[toCamelCase(styleProp)];
-        else if (window.getComputedStyle)
-            s = document.defaultView.getComputedStyle(el, null).getPropertyValue(styleProp);
-        return s;
+  var getStyle = function (el, styleProp) {
+        if (typeof el['currentStyle']==='object'){
+            getStyle = function (el, styleProp){
+              var s='';
+              s = el.currentStyle[toCamelCase(styleProp)];
+              return s;
+            }
+          }
+        else if (window.getComputedStyle){
+            getStyle = function (el, styleProp){
+              var s='';
+              s = document.defaultView.getComputedStyle(el, null).getPropertyValue(styleProp);
+              return s;
+            }
+          }
+      return getStyle(el, styleProp);
   }
   var currentElement;
   var fairlyHighZIndex = '10';
+  var whichButton = function(event){
+    if (event.which == null){
+      whichButton = function(event){
+        button = (event.button < 2) ? "LEFT" :
+          ((event.button == 4) ? "MIDDLE" : "RIGHT");
+          return button;
+      }
+    }else{
+      whichButton = function(event){
+        button = (event.which < 2) ? "LEFT" :
+          ((event.which == 2) ? "MIDDLE" : "RIGHT");
+          return button;
+      }
+    }
+  }
 
   function draggable(element, handle) {
     handle = handle || element;
@@ -44,15 +80,7 @@
     setPositionType(element);
     setDraggableListeners(element);
     addEventListener(handle,'mousedown', function(event) {
-        if (event.which == null)
-        /* IE case */
-            button = (event.button < 2) ? "LEFT" :
-                ((event.button == 4) ? "MIDDLE" : "RIGHT");
-        else
-        /* All others */
-            button = (event.which < 2) ? "LEFT" :
-                ((event.which == 2) ? "MIDDLE" : "RIGHT");
-      button==='LEFT' && startDragging(event, element);
+      whichButton(event)==='LEFT' && startDragging(event, element);
     });
   }
 
