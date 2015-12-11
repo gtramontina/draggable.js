@@ -1,4 +1,4 @@
-# draggable.js [![Build Status](https://travis-ci.org/gtramontina/draggable.js.png)](https://travis-ci.org/gtramontina/draggable.js) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/gtramontina/draggable.js/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+# draggable.js [![Build Status](https://travis-ci.org/gtramontina/draggable.js.png)](https://travis-ci.org/gtramontina/draggable.js) [![codecov.io](https://codecov.io/github/gtramontina/draggable.js/coverage.svg?branch=master)](https://codecov.io/github/gtramontina/draggable.js?branch=master) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/gtramontina/draggable.js/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 ##### Make your DOM elements draggagle easily
 
 ### Examples
