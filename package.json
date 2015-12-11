@@ -1,16 +1,32 @@
 {
-  "name"              : "draggable.js",
-  "version"           : "1.0.1",
-  "description"       : "Make your DOM elements draggable easily",
-  "keywords"          : [ "microjs", "drag", "draggable" ],
-  "author"            : "Guilherme J. Tramontina <guilherme.tramontina@gmail.com>",
-  "repository"        : {
-    "type"            : "git",
-    "url"             : "https://github.com/gtramontina/draggable.js"
+  "name": "draggable.js",
+  "version": "1.0.1",
+  "description": "Make your DOM elements draggable easily",
+  "keywords": [
+    "microjs",
+    "drag",
+    "draggable"
+  ],
+  "author": "Guilherme J. Tramontina <guilherme.tramontina@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gtramontina/draggable.js"
+  },
+  "scripts": {
+    "test": "karma start conf/karma.conf.js"
   },
   "main": "draggable.js",
-  "devDependencies"   : {
-    "phantomjs"       : "1.9",
-    "mocha-phantomjs" : "3.1"
+  "devDependencies": {
+    "karma": "^0.13.15",
+    "karma-chrome-launcher": "^0.2.2",
+    "karma-coverage": "^0.5.3",
+    "karma-firefox-launcher": "^0.1.7",
+    "karma-ie-launcher": "^0.2.0",
+    "karma-mocha": "^0.2.1",
+    "karma-opera-launcher": "^0.3.0",
+    "karma-phantomjs-launcher": "^0.2.1",
+    "karma-safari-launcher": "^0.1.1",
+    "mocha-phantomjs": "3.1",
+    "phantomjs": "1.9"
   }
 }
