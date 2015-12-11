@@ -1,2 +1,2 @@
-before_script: make
+before_script: make install
 script: make test
