@@ -1,9 +1,6 @@
 {
   "name": "draggable.js",
   "version": "1.0.1",
-  "scripts": {
-    "minify": "uglifyjs draggable.js --compress --output draggable.min.js --source-map draggable.js"
-  },
   "description": "Make your DOM elements draggable easily",
   "keywords": [
     "microjs",

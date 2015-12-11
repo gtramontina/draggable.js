@@ -1,19 +1,25 @@
 source = draggable.js
-#sourcemap := $(source).map
 minified = draggable.min.js
+sourcemap := $(minified).map
+miniandmap := $(minified) $(sourcemap)
 
-$(minified): $(source)
-	@echo "> Minifying..."
-	npm run minify $(source) \
+minify: $(minified) $(sourcemap)
+
+$(miniandmap) : $(source)
+	@echo "> Minifying..."; \
+	./node_modules/.bin/uglifyjs $(source) \
 					--compress \
-					--source-map $(source) \
-					--output $(minified)
+					--output $(minified) \
+					--source-map $(sourcemap)
 
-install:
+install :
 	@npm install
 
-test:
+test :
 	@./node_modules/.bin/mocha-phantomjs \
-		test/test.html	
+		test/test.html
+		
+clean :
+	@rm --verbose $(miniandmap)
 
-.PHONY: install test
+.PHONY: install test clean
