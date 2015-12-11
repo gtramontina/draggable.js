@@ -19,4 +19,7 @@ minify:
 		-o $(minified) \
 		http://closure-compiler.appspot.com/compile
 
-.PHONY: install test minify
+coverage: test
+	@./node_modules/.bin/codecov
+
+.PHONY: install test minify coverage

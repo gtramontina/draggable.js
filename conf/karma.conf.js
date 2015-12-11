@@ -40,6 +40,18 @@ module.exports = function(config) {
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
     reporters: ['progress', 'coverage'],
+    
+    
+    // configure the coverage reporter 
+    coverageReporter: {
+      // Specify a reporter type.
+      type: 'lcov',
+      dir: 'coverage/',
+      subdir: function(browser) {
+        // normalization process to keep a consistent browser name accross different OS
+        return browser.toLowerCase().split(/[ /-]/)[0]; // output the results into: './coverage/phantomjs/'
+      }
+    },
 
 
     // web server port
