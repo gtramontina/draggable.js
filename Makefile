@@ -1,23 +1,19 @@
 source = draggable.js
+#sourcemap := $(source).map
 minified = draggable.min.js
+
+$(minified): $(source)
+	@echo "> Minifying..."
+	npm run minify $(source) \
+					--compress \
+					--source-map $(source) \
+					--output $(minified)
 
 install:
 	@npm install
 
 test:
 	@./node_modules/.bin/mocha-phantomjs \
-		test/test.html
+		test/test.html	
 
-minify:
-	@echo "> Minifying..."
-	@rm -f $(minified)
-	@curl -s \
-		-X POST \
-		--data-urlencode 'compilation_level=SIMPLE_OPTIMIZATIONS' \
-		--data-urlencode 'output_format=text' \
-		--data-urlencode 'output_info=compiled_code' \
-		--data-urlencode 'js_code@$(source)' \
-		-o $(minified) \
-		https://closure-compiler.appspot.com/compile
-
-.PHONY: install test minify
+.PHONY: install test

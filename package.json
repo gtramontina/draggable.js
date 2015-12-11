@@ -1,16 +1,24 @@
 {
-  "name"              : "draggable.js",
-  "version"           : "1.0.1",
-  "description"       : "Make your DOM elements draggable easily",
-  "keywords"          : [ "microjs", "drag", "draggable" ],
-  "author"            : "Guilherme J. Tramontina <guilherme.tramontina@gmail.com>",
-  "repository"        : {
-    "type"            : "git",
-    "url"             : "https://github.com/gtramontina/draggable.js"
+  "name": "draggable.js",
+  "version": "1.0.1",
+  "scripts": {
+    "minify": "uglifyjs draggable.js --compress --output draggable.min.js --source-map draggable.js"
+  },
+  "description": "Make your DOM elements draggable easily",
+  "keywords": [
+    "microjs",
+    "drag",
+    "draggable"
+  ],
+  "author": "Guilherme J. Tramontina <guilherme.tramontina@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gtramontina/draggable.js"
   },
   "main": "draggable.js",
-  "devDependencies"   : {
-    "phantomjs"       : "1.9",
-    "mocha-phantomjs" : "3.1"
+  "devDependencies": {
+    "mocha-phantomjs": "3.1",
+    "phantomjs": "1.9",
+    "uglifyjs": "^2.4.10"
   }
 }
