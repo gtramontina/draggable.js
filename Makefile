@@ -5,7 +5,7 @@ miniandmap := $(minified) $(sourcemap)
 
 minify: $(minified) $(sourcemap)
 
-$(miniandmap) : $(source)
+draggable.min.%s draggable.min.%s.map : $(source)
 	@echo "> Minifying..."; \
 	./node_modules/.bin/uglifyjs $(source) \
 					--compress \
