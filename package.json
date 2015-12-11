@@ -13,7 +13,7 @@
     "url": "https://github.com/gtramontina/draggable.js"
   },
   "scripts": {
-    "test": "karma start conf/karma.conf.js"
+    "test": "make test"
   },
   "main": "draggable.js",
   "devDependencies": {
