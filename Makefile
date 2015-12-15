@@ -1,25 +1,27 @@
 source = draggable.js
 minified = draggable.min.js
+sourcemap := $(minified).map
+miniandmap := $(minified) $(sourcemap)
 
-install:
+minify: $(minified) $(sourcemap)
+
+draggable.min.%s draggable.min.%s.map : $(source)
+	@echo "> Minifying..."; \
+	./node_modules/.bin/uglifyjs $(source) \
+					--compress \
+					--output $(minified) \
+					--source-map $(sourcemap)
+
+install :
 	@npm install
 
 test:
 	@./node_modules/.bin/karma start conf/karma.conf.js
 
-minify:
-	@echo "> Minifying..."
-	@rm -f $(minified)
-	@curl -s \
-		-X POST \
-		--data-urlencode 'compilation_level=SIMPLE_OPTIMIZATIONS' \
-		--data-urlencode 'output_format=text' \
-		--data-urlencode 'output_info=compiled_code' \
-		--data-urlencode 'js_code@$(source)' \
-		-o $(minified) \
-		http://closure-compiler.appspot.com/compile
-
 coverage: test
 	@./node_modules/.bin/codecov
 
-.PHONY: install test minify coverage
+clean :
+	@rm --verbose $(miniandmap)
+
+.PHONY: install test coverage clean
