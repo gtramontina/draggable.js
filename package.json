@@ -12,9 +12,16 @@
     "type": "git",
     "url": "https://github.com/gtramontina/draggable.js"
   },
+  "scripts": {
+    "test": "make test"
+  },
   "main": "draggable.js",
   "devDependencies": {
-    "mocha-phantomjs": "3.1",
+    "codecov": "1.0",
+    "karma": "0.13",
+    "karma-coverage": "0.5",
+    "karma-mocha": "0.2",
+    "karma-phantomjs-launcher": "0.2",
     "phantomjs": "1.9",
     "uglifyjs": "^2.4.10"
   }

@@ -15,11 +15,13 @@ draggable.min.%s draggable.min.%s.map : $(source)
 install :
 	@npm install
 
-test :
-	@./node_modules/.bin/mocha-phantomjs \
-		test/test.html
-		
+test:
+	@./node_modules/.bin/karma start conf/karma.conf.js
+
+coverage: test
+	@./node_modules/.bin/codecov
+
 clean :
 	@rm --verbose $(miniandmap)
 
-.PHONY: install test clean
+.PHONY: install test coverage clean
