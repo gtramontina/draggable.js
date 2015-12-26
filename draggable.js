@@ -100,12 +100,25 @@
     element.whenDragStops = addListener(element, 'stop');
   }
 
+  function setStyle(el, strCss){
+    function endsWith(str, suffix) {
+        var l = str.length - suffix.length;
+        return l >= 0 && str.indexOf(suffix, l) == l;
+    }
+    var sty = el.style,
+        cssText = sty.cssText;
+    if(!endsWith(cssText, ';')){
+        cssText += ';';
+    }
+    sty.cssText = cssText + strCss;
+  }
+
   function startDragging(event, element) {
     currentElement && sendToBack(currentElement);
     currentElement = bringToFront(element);
     var initialPosition = getInitialPosition(currentElement);
-    currentElement.style.left = inPixels(initialPosition.left);
-    currentElement.style.top = inPixels(initialPosition.top);
+    var css = 'position:absolute;margin-left:0;margin-top:0;left:'+inPixels(initialPosition.left)+';top:'+inPixels(initialPosition.top)+';'
+    setStyle(currentElement,css);
     currentElement.lastXPosition = event.clientX;
     currentElement.lastYPosition = event.clientY;
 
@@ -151,7 +164,7 @@
   function getInitialPosition(element) {
   var rect={};
     if(getStyle(element,'position')=='absolute'){
-        rect={top:parseInt(getStyle(element,'top')),left:parseInt(getStyle(element,'left'))};
+        rect = {top:element.offsetTop,left:element.offsetLeft};
     }else{
        rect = element.getBoundingClientRect();
 
