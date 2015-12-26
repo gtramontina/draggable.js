@@ -1,11 +1,23 @@
 describe('Draggable.js', function() {
-  var getStyle =function (el, styleProp) {
-      var s='';
-        if (el && typeof el.currentStyle==='object')
-            s = el.currentStyle[styleProp];
-        else if (window.getComputedStyle)
-            s = document.defaultView.getComputedStyle(el, null).getPropertyValue(styleProp);
-        return s;
+    function toCamelCase(s){
+    return s.replace(/(\-[a-z])/g, function($1){return $1.toUpperCase().replace('-','');});
+  }
+    var getStyle = function (el, styleProp) {
+        if (typeof el['currentStyle']==='object'){
+            getStyle = function (el, styleProp){
+              var s='';
+              s = el.currentStyle[toCamelCase(styleProp)];
+              return s;
+            }
+          }
+        else if (window.getComputedStyle){
+            getStyle = function (el, styleProp){
+              var s='';
+              s = document.defaultView.getComputedStyle(el, null).getPropertyValue(styleProp);
+              return s;
+            }
+          }
+      return getStyle(el, styleProp);
   };
   var draggableBox,fairlyHighZIndex;
   var initialPosition = {

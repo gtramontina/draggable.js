@@ -5,54 +5,83 @@
   else this[moduleName] = definition();
 
 })('draggable', function definition() {
-  function addEventListener(element, eventName, handler) {
-                if (element.addEventListener) {
-                    element.addEventListener(eventName, handler, false);
-                } else if (element.attachEvent) {
-                    element.attachEvent('on' + eventName, handler);
+  var addEventListener = ( function (w) {
+                if (w.addEventListener) {
+                    return function (element, eventName, handler){
+                      element.addEventListener(eventName, handler, false);
+                    }
+                } else if (w.attachEvent) {
+                    return function (element, eventName, handler){
+                      element.attachEvent('on' + eventName, handler);
+                    } 
                 } else {
+                  return function (element, eventName, handler){
                     element['on' + eventName] = handler;
+                  }
                 }
-            }
-  function removeEventListener(element, eventName, handler) {
-      if (element.removeEventListener) {
+            })(window)
+  ,removeEventListener = ( function(w) {
+      if (w.removeEventListener) {
+        return function (element, eventName, handler){
           element.removeEventListener(eventName, handler, false);
-      } else if (element.detachEvent) {
+        }
+      } else if (w.detachEvent) {
+        return function (element, eventName, handler){
           element.detachEvent('on' + eventName,handler);
+        }
       } else {
+        return function (element, eventName, handler){
           element['on' + eventName] = null;
+        }
       }
-  }
-  function toCamelCase(s){
+  })(window)
+  , toCamelCase = function (s){
     return s.replace(/(\-[a-z])/g, function($1){return $1.toUpperCase().replace('-','');});
   }
-  function getStyle(el, styleProp) {
-      var s='';
-        if (typeof el['currentStyle']==='object')
-            s = el.currentStyle[toCamelCase(styleProp)];
-        else if (window.getComputedStyle)
-            s = document.defaultView.getComputedStyle(el, null).getPropertyValue(styleProp);
-        return s;
+  , getStyle = function (el, styleProp) {
+        if (typeof el['currentStyle']==='object'){
+            getStyle = function (el, styleProp){
+              var s='';
+              s = el.currentStyle[toCamelCase(styleProp)];
+              return s;
+            }
+          }
+        else if (window.getComputedStyle){
+            getStyle = function (el, styleProp){
+              var s='';
+              s = document.defaultView.getComputedStyle(el, null).getPropertyValue(styleProp);
+              return s;
+            }
+          }
+      return getStyle(el, styleProp);
   }
-  var currentElement;
-  var fairlyHighZIndex = '10';
+  , currentElement
+  , fairlyHighZIndex = '10'
+  , whichButton = function(event){
+    if (event.which == null){
+      whichButton = function(event){
+        button = (event.button < 2) ? "LEFT" :
+          ((event.button == 4) ? "MIDDLE" : "RIGHT");
+          return button;
+      }
+    }else{
+      whichButton = function(event){
+        button = (event.which < 2) ? "LEFT" :
+          ((event.which == 2) ? "MIDDLE" : "RIGHT");
+          return button;
+      }
+    }
+    return whichButton(event);
+  };
 
   function draggable(element, handle) {
     handle = handle || element;
-    var index=parseInt(getStyle(element,'z-index'));
+    var index = parseInt(getStyle(element,'z-index'));
     fairlyHighZIndex = isNaN(index)? '10' : index ;
     setPositionType(element);
     setDraggableListeners(element);
     addEventListener(handle,'mousedown', function(event) {
-        if (event.which == null)
-        /* IE case */
-            button = (event.button < 2) ? "LEFT" :
-                ((event.button == 4) ? "MIDDLE" : "RIGHT");
-        else
-        /* All others */
-            button = (event.which < 2) ? "LEFT" :
-                ((event.which == 2) ? "MIDDLE" : "RIGHT");
-      button==='LEFT' && startDragging(event, element);
+      whichButton(event)==='LEFT' && startDragging(event, element);
     });
   }
 
@@ -71,14 +100,25 @@
     element.whenDragStops = addListener(element, 'stop');
   }
 
+  function setStyle(el, strCss){
+    function endsWith(str, suffix) {
+        var l = str.length - suffix.length;
+        return l >= 0 && str.indexOf(suffix, l) == l;
+    }
+    var sty = el.style,
+        cssText = sty.cssText;
+    if(!endsWith(cssText, ';')){
+        cssText += ';';
+    }
+    sty.cssText = cssText + strCss;
+  }
+
   function startDragging(event, element) {
     currentElement && sendToBack(currentElement);
     currentElement = bringToFront(element);
-
-
     var initialPosition = getInitialPosition(currentElement);
-    currentElement.style.left = inPixels(initialPosition.left);
-    currentElement.style.top = inPixels(initialPosition.top);
+    var css = 'position:absolute;margin-left:0;margin-top:0;left:'+inPixels(initialPosition.left)+';top:'+inPixels(initialPosition.top)+';'
+    setStyle(currentElement,css);
     currentElement.lastXPosition = event.clientX;
     currentElement.lastYPosition = event.clientY;
 
@@ -124,7 +164,7 @@
   function getInitialPosition(element) {
   var rect={};
     if(getStyle(element,'position')=='absolute'){
-        rect={top:parseInt(getStyle(element,'top')),left:parseInt(getStyle(element,'left'))};
+        rect = {top:element.offsetTop,left:element.offsetLeft};
     }else{
        rect = element.getBoundingClientRect();
 
