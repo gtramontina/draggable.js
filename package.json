@@ -2,6 +2,7 @@
   "name": "draggable.js",
   "version": "1.0.1",
   "description": "Make your DOM elements draggable easily",
+  "license": "WTFPL",
   "keywords": [
     "microjs",
     "drag",
