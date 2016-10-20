@@ -16,8 +16,8 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'https://cdn.jsdelivr.net/jquery/2.1/jquery.min.js',
-      'http://rawgithub.com/LearnBoost/expect.js/master/index.js',
-      'http://rawgithub.com/tmcw/happen/master/happen.js',
+      'http://rawgit.com/LearnBoost/expect.js/master/index.js',
+      'http://rawgit.com/tmcw/happen/master/happen.js',
       'draggable.js',
       'test/draggable.test.js'
     ],
