@@ -33,5 +33,12 @@ draggable(elementToDrag, handle);
 ### Browser Compatibility
 I've ran the tests in Chrome and Firefox. On [travis-ci](https://travis-ci.org/gtramontina/draggable.js) the tests run in Phantomjs. If you find any incompatibility or want to support other browsers, please do a pull request with the fix! :-)
 
+### Development
+*Prerequisites*  
+[phantomjs](http://phantomjs.org/download.html)   
+mocha `npm install mocha`  
+
+
+
 ### License
 This is licensed under the feel-free-to-do-whatever-you-want-to-do license.
