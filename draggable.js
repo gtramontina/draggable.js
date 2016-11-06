@@ -192,6 +192,8 @@
     var style = currentElement.style;
     var elementXPosition = parseInt(style.left, 10);
     var elementYPosition = parseInt(style.top, 10);
+    var offsetX = event.clientX - currentElement.lastXPosition;
+    var offsetY = event.clientY - currentElement.lastYPosition;
 
     var elementNewXPosition = elementXPosition + (event.clientX - currentElement.lastXPosition);
     var elementNewYPosition = elementYPosition + (event.clientY - currentElement.lastYPosition);
@@ -202,7 +204,7 @@
     currentElement.lastXPosition = event.clientX;
     currentElement.lastYPosition = event.clientY;
 
-    triggerEvent('drag', { x: elementNewXPosition, y: elementNewYPosition, mouseEvent: event });
+    triggerEvent('drag', { x: elementNewXPosition, y: elementNewYPosition, mouseEvent: event ,offsetX:offsetX,offsetY:offsetY });
   }
 
   function removeDocumentListeners(event) {
