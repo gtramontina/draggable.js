@@ -22,6 +22,6 @@ coverage: test
 	@./node_modules/.bin/codecov
 
 clean :
-	@rm --verbose $(miniandmap)
+	@rm -v $(miniandmap)
 
 .PHONY: install test coverage clean
